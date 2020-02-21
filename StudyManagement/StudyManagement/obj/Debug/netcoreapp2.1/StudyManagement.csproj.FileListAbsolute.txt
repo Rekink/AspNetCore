@@ -1,0 +1,14 @@
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\bin\Debug\netcoreapp2.1\StudyManagement.deps.json
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\bin\Debug\netcoreapp2.1\StudyManagement.runtimeconfig.json
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\bin\Debug\netcoreapp2.1\StudyManagement.runtimeconfig.dev.json
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\bin\Debug\netcoreapp2.1\StudyManagement.dll
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\bin\Debug\netcoreapp2.1\StudyManagement.pdb
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.csprojAssemblyReference.cache
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.csproj.CoreCompileInputs.cache
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.RazorAssemblyInfo.cache
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.RazorAssemblyInfo.cs
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.AssemblyInfoInputs.cache
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.AssemblyInfo.cs
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.RazorTargetAssemblyInfo.cache
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.dll
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.1\StudyManagement.pdb
