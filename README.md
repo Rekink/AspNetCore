@@ -15,7 +15,7 @@ AspNetCoreHostingModel属性：指定应用程序托管形式
   </PropertyGroup>
 ```
  * Log 中间件
- * IConfiguration接口：通过key获取配置信息 
+ * IConfiguration接口：通过key获取配置信息<br> 
 		appsettings.json、User Secrets、系统环境变量、命令行参数
  
  服务注册
@@ -33,7 +33,7 @@ AspNetCoreHostingModel属性：指定应用程序托管形式
         //services.AddScoped<IWelcomeService, WelcomeService>();
    }
  ```
- 管道 
+ 管道<br> 
 	一个Post请求常见管道流程：Logger日志、授权、路由、、、
 	每一个中间件都是双向管道
  
