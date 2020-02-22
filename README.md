@@ -39,9 +39,9 @@ AspNetCoreHostingModel属性：指定应用程序托管形式
  
 ### 中间件
 
-*按顺序添加执行，能够同时被访问和请求
-*处理请求后，可以将请求传递给下一个中间件或者使管道短路
-实例：
+* 按顺序添加执行，能够同时被访问和请求
+* 处理请求后，可以将请求传递给下一个中间件或者使管道短路<br>
+实例：<br>
 添加参数ILogger<Startup> logger引入Asp.Net Core自带的日志组件
 ```c#
   public void Configure(
