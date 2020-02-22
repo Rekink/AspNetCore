@@ -22,3 +22,4 @@ namespace StudyManagement
                 .UseStartup<Startup>();
     }
 }
+
