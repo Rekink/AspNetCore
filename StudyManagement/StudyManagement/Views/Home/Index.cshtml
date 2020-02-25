@@ -1,5 +1,9 @@
-﻿@using StudyManagement.Model
-@model IEnumerable<StudyManagement.Model.Student>
+﻿@*@using StudyManagement.Model
+    @model IEnumerable<StudyManagement.Model.Student>*@
+@*@model IEnumerable<StudyManagement.ViewModels.HomeIndexViewModel>*@
+
+@model StudyManagement.ViewModels.HomeIndexViewModel
+
 @{
     Layout = null;
 }
@@ -17,10 +21,22 @@
 
     <h1>student</h1>
     <ul>
-        @foreach (var item in Model)
+        @foreach (var i in Model.Students)
+        {
+            @*<li>@i.Name (@i.Age) <a href="/Home/Detail/@i.Id">Detail</a> </li>*@
+            <li>
+                @i.Name (@i.Age)
+                <a asp-controller="Home" 
+                   asp-action="Detail" 
+                   asp-Route-id="@i.Id">Detail
+               </a>        
+            </li>
+        }
+
+        @*@foreach (var item in Model)
         {
             <li>@item.FirstName - @item.LastName </li>
-        }
+        }*@
     </ul>
 
 </body>

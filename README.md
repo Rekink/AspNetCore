@@ -18,7 +18,8 @@ AspNetCoreHostingModel属性：指定应用程序托管形式
  * IConfiguration接口：通过key获取配置信息<br> 
 		配置信息来源：appsettings.json、User Secrets、系统环境变量、命令行参数
  
-#### 服务注册
+#### 服务注册（依赖注入容器）
+依赖注入:低耦合、高测试性，更加方便进行单元测试
  * AddSingleton 单例模式，整个Web生命周期，只有一个实例
  * AddTransient 每次请求IWelcomeService都会创建WelcomeService实例
  * AddScoped 一次Web请求创建一个WelcomeService实例，期间多次请求会继续使用同一个实例
@@ -140,7 +141,7 @@ Microsoft.AspNetCore.Hosting.Internal.WebHost:Information: Request finished in 9
 * View：将 Model 转换为 HTML 页面<br>
 
 #### 路由
-* 约定路由：/控制器名称/方法名称（不区分大小写）
+* 约定路由：/控制器名称/方法名称（不区分大小写）MapRoute
 ```c#
 app.UseMvc(builder=>
 {
@@ -199,10 +200,30 @@ Controller父类,提供l 很多上下文相关信息及封装方法，例如this
 ```
 
 
+#### TagHelper
+添加TagHelper，View文件夹中添加Razor视图导入（import）
+```c#
+@addTagHelper * , Microsoft.AspNetCore.Mvc.TagHelpers
+```
+
+TagHelper使用
+```c#
+@foreach (var i in Model.Students)
+{
+    @*<li>@i.Name (@i.Age) <a href="/Home/Detail/@i.Id">Detail</a> </li>*@
+    <li>
+        @i.Name (@i.Age)
+        <a asp-controller="Home" 
+           asp-action="Detail" 
+           asp-Route-id="@i.Id">Detail
+       </a>        
+    </li>
+}
+```
+
+#### 模型绑定、验证
 
 
 
-
-
-
+### EF Core
 
