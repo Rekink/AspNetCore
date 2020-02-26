@@ -199,7 +199,6 @@ Controller父类,提供l 很多上下文相关信息及封装方法，例如this
     }
 ```
 
-
 #### TagHelper
 添加TagHelper，View文件夹中添加Razor视图导入（import）
 ```c#
@@ -222,8 +221,79 @@ TagHelper使用
 ```
 
 #### 模型绑定、验证
+* Input Model
+在View填写并提交的Model不包含的Id属性<br>
+如果提交方法使用Student类型作为Model<br>
+MVC框架会想尽办法在提交的信息里面找Id属性<br>
+最后导致出现意想不到的状况<br>
+因此需要创建与View 提交的 Model 属性一致的 Input Model
 
+* 防止重复Post
+使用AddSingleton注册服务时，<br>
+提交Model可能会出现重复提交的情况，例如，刷新提交页面，会重复Post请求<br>
+Post-Redirect-Get模式重定向防止重复提交（RedirectToAction）
+
+```c#
+[HttpPost]
+public IActionResult Create(StudentCreateViewModel student)
+{
+    var stu = new Student
+    {
+        FirstName = student.FirstName,
+        LastName = student.LastName,
+        BirthDate = student.BirthDate,
+        Gender = student.Gender
+    };
+
+    var newStu = _repository.Add(stu);
+
+    return RedirectToAction(nameof(Detail), new { id = newStu.Id });
+
+    //return View("Detail", newStu);
+
+    //return Content(JsonConvert.SerializeObject(student));
+}
+```
+
+提交URL：
+```c#
+http://localhost:64574/home/Create
+```
+
+重定向后URL：
+```c#
+http://localhost:64574/home/Detail/5
+```
+刷新只会请求学生信息页面
+
+* Data Annotations数据注解
+在模型绑定的同时，会做验证<br>
+验证信息可以在ModelState中查看
+[Required]
+[Display(Name = "名"), MaxLength(10)]
+[DataType(DataType.Password)]
 
 
 ### EF Core
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

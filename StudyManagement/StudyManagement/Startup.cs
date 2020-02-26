@@ -19,7 +19,7 @@ namespace StudyManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IRepository<Student>, InMemoryRepository>();
+            services.AddSingleton<IRepository<Student>, InMemoryRepository>();
 
 
             // 单例模式，整个Web生命周期，只有一个实例
@@ -71,8 +71,6 @@ namespace StudyManagement
                 var welcome = welcomeService.GetMesssge();
                 await context.Response.WriteAsync(welcome);
             });
-
-
 
             //app.Run(async (context) =>
             //{

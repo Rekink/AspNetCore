@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using StudyManagement.Model;
 using StudyManagement.Services;
 using StudyManagement.ViewModels;
@@ -68,14 +69,49 @@ namespace StudyManagement.Controllers
             var student = _repository.GetById(id);
             if (student==null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
                 //return View("NotFound");
             }
             return View(student);
 
             //return Content(id.ToString());
         }
+        // 默认HttpGet
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        //<form>内自动添加一个隐式的input
+        // 用于防止 CSRF（跨站请求伪造）
+        // 验证Token
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(StudentCreateViewModel student)
+        {
+            if (ModelState.IsValid)
+            {
+                var stu = new Student
+                {
+                    FirstName = student.FirstName,
+                    LastName = student.LastName,
+                    BirthDate = student.BirthDate,
+                    Gender = student.Gender
+                };
+
+                var newStu = _repository.Add(stu);
+
+                return RedirectToAction(nameof(Detail), new { id = newStu.Id });
+            }
+           
+             return View();
+            
+
+            //return View("Detail", newStu);
+
+            //return Content(JsonConvert.SerializeObject(student));
+        }
 
     }
 }

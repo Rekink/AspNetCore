@@ -11,7 +11,23 @@
     <title>Detail</title>
 </head>
 <body>
-    <h1>@Model.FirstName @Model.LastName</h1>
-    <a asp-action="Index">返回到Home</a>
+    @*<h1>@Model.FirstName @Model.LastName</h1>*@
+    @*<a asp-action="Index">返回到Home</a>*@
+    <div>
+        <h1>学生信息</h1>
+        <h2>ID:@Model.Id</h2>
+        <div>
+            姓名：@Model.FirstName @Model.LastName
+        </div>
+        <div>
+            性别：@Model.Gender
+        </div>
+        <div>
+            出生日期：@Model.BirthDate.ToString("yyy-MM-dd")
+        </div>
+        <a asp-action="Index">返回到Home</a>
+    </div>
+
+
 </body>
 </html>

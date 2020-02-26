@@ -20,7 +20,7 @@ namespace StudyManagement.Services
                     FirstName = "Dave",
                     LastName="jian",
                     BirthDate=new DateTime(1991,5,10),
-                    Sex = "man"
+                    Gender = Gender.男
                 },
                 new Student
                 {
@@ -28,7 +28,7 @@ namespace StudyManagement.Services
                     FirstName = "Mary",
                     LastName="an",
                     BirthDate =new DateTime(1993,5,10),
-                    Sex = "female"
+                    Gender = Gender.女
                 },
                 new Student
                 {
@@ -36,9 +36,17 @@ namespace StudyManagement.Services
                     FirstName = "Peter",
                     LastName="chen",
                     BirthDate=new DateTime(1994,5,10),
-                    Sex = "man"
+                    Gender = Gender.男
                 }
             };
+        }
+
+        public Student Add(Student stu)
+        {
+            var maxId = _student.Max(x => x.Id);
+            stu.Id = maxId + 1;
+            _student.Add(stu);
+            return stu;
         }
 
         public IEnumerable<Student> GetAll()

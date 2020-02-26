@@ -16,7 +16,7 @@
     <title>Index</title>
 </head>
 <body>
-    <h1>Hello from Index.cshtml</h1>
+    @*<h1>Hello from Index.cshtml</h1>*@
     @*<h1>@Model.FirstName @Model.LastName @Model.Sex</h1>*@
 
     <h1>student</h1>
@@ -38,6 +38,8 @@
             <li>@item.FirstName - @item.LastName </li>
         }*@
     </ul>
-
+    <div>
+        <a asp-action="Create">添加</a>
+    </div>
 </body>
 </html>
