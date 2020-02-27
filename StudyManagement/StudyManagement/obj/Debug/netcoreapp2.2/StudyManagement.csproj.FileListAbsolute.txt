@@ -24,3 +24,4 @@ E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.2
 E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.2\Razor\Views\Home\Detail.g.cshtml.cs
 E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.2\Razor\Views\_ViewImports.g.cshtml.cs
 E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.2\Razor\Views\Home\Create.g.cshtml.cs
+E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_Layout.g.cshtml.cs

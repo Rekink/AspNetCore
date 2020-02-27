@@ -139,7 +139,9 @@ Microsoft.AspNetCore.Hosting.Internal.WebHost:Information: Request finished in 9
 * Controller：接收请求，构建 Model，选择 View
 * Model：携带数据信息类和管理该数据的逻辑信息
 * View：将 Model 转换为 HTML 页面<br>
-
+ 
+ （快速添加类属性prop+Tab+tab）
+ 
 #### 路由
 * 约定路由：/控制器名称/方法名称（不区分大小写）MapRoute
 ```c#
@@ -269,9 +271,11 @@ http://localhost:64574/home/Detail/5
 * Data Annotations数据注解
 在模型绑定的同时，会做验证<br>
 验证信息可以在ModelState中查看
+```c#
 [Required]
 [Display(Name = "名"), MaxLength(10)]
 [DataType(DataType.Password)]
+```
 
 
 ### EF Core

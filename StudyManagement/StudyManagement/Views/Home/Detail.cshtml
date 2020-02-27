@@ -1,4 +1,4 @@
-﻿@model StudyManagement.Model.Student
+﻿@model Student
 @{
     Layout = null;
 }
@@ -14,7 +14,7 @@
     @*<h1>@Model.FirstName @Model.LastName</h1>*@
     @*<a asp-action="Index">返回到Home</a>*@
     <div>
-        <h1>学生信息</h1>
+        <h1>学生详细信息</h1>
         <h2>ID:@Model.Id</h2>
         <div>
             姓名：@Model.FirstName @Model.LastName
@@ -23,7 +23,13 @@
             性别：@Model.Gender
         </div>
         <div>
+            班级：@Model.ClassName
+        </div>
+        <div>
             出生日期：@Model.BirthDate.ToString("yyy-MM-dd")
+        </div>
+        <div>
+            邮箱：@Model.Email
         </div>
         <a asp-action="Index">返回到Home</a>
     </div>

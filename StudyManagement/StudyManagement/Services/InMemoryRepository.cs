@@ -20,7 +20,9 @@ namespace StudyManagement.Services
                     FirstName = "Dave",
                     LastName="jian",
                     BirthDate=new DateTime(1991,5,10),
-                    Gender = Gender.男
+                    Gender = Gender.男,
+                    Email="daveyeah.net",
+                    ClassName="一年级"
                 },
                 new Student
                 {
@@ -28,7 +30,9 @@ namespace StudyManagement.Services
                     FirstName = "Mary",
                     LastName="an",
                     BirthDate =new DateTime(1993,5,10),
-                    Gender = Gender.女
+                    Gender = Gender.女,
+                    Email="marryyeah.net",
+                    ClassName="二年级"
                 },
                 new Student
                 {
@@ -36,7 +40,9 @@ namespace StudyManagement.Services
                     FirstName = "Peter",
                     LastName="chen",
                     BirthDate=new DateTime(1994,5,10),
-                    Gender = Gender.男
+                    Gender = Gender.男,
+                    Email="peteryeah.net",
+                    ClassName="一年级"
                 }
             };
         }

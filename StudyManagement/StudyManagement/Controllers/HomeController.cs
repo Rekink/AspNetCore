@@ -33,9 +33,12 @@ namespace StudyManagement.Controllers
 
             var viewModel = list.Select(x => new StudentViewModel
             {
-                Id=x.Id,
-                Name = $"{x.FirstName} {x.LastName}",
-                Age = DateTime.Now.Subtract(x.BirthDate).Days/365
+                Id = x.Id,
+                Name = $"{x.FirstName}",
+                //Name = $"{x.FirstName} {x.LastName}",
+                //Age = DateTime.Now.Subtract(x.BirthDate).Days / 365,
+                Email = x.Email,
+                ClassName = x.ClassName
             });
 
             var homeModel = new HomeIndexViewModel

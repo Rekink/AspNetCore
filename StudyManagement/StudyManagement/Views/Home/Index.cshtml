@@ -4,6 +4,7 @@
 
 @model StudyManagement.ViewModels.HomeIndexViewModel
 
+
 @{
     Layout = null;
 }
@@ -13,33 +14,52 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>student</title>
 </head>
 <body>
     @*<h1>Hello from Index.cshtml</h1>*@
     @*<h1>@Model.FirstName @Model.LastName @Model.Sex</h1>*@
-
-    <h1>student</h1>
+    <h1>学生列表</h1>
     <ul>
         @foreach (var i in Model.Students)
         {
             @*<li>@i.Name (@i.Age) <a href="/Home/Detail/@i.Id">Detail</a> </li>*@
             <li>
-                @i.Name (@i.Age)
-                <a asp-controller="Home" 
-                   asp-action="Detail" 
-                   asp-Route-id="@i.Id">Detail
-               </a>        
+                @i.Name  @i.ClassName
+                <a asp-controller="Home"
+                   asp-action="Detail"
+                   asp-Route-id="@i.Id">
+                    Detail
+                </a>
             </li>
-        }
-
-        @*@foreach (var item in Model)
-        {
-            <li>@item.FirstName - @item.LastName </li>
-        }*@
+         }
     </ul>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>名字</th>
+                <th>年级</th>
+                <th>邮箱</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.Students)
+            {
+                <tr>
+                    <td> @i.Id </td>           
+                    <td> @i.Name </td>            
+                    <td> @i.ClassName </td>               
+                    <td> @i.Email </td>                
+                </tr>
+             }
+        </tbody>
+    </table>
     <div>
         <a asp-action="Create">添加</a>
     </div>
+
 </body>
 </html>
