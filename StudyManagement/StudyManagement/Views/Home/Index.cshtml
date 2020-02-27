@@ -6,7 +6,8 @@
 
 
 @{
-    Layout = null;
+    //Layout = null;
+    Layout = "_Layout";
 }
 
 <!DOCTYPE html>
@@ -32,7 +33,7 @@
                     Detail
                 </a>
             </li>
-         }
+        }
     </ul>
 
 
@@ -49,17 +50,38 @@
             @foreach (var i in Model.Students)
             {
                 <tr>
-                    <td> @i.Id </td>           
-                    <td> @i.Name </td>            
-                    <td> @i.ClassName </td>               
-                    <td> @i.Email </td>                
+                    <td> @i.Id </td>
+                    <td> @i.Name </td>
+                    <td> @i.ClassName </td>
+                    <td> @i.Email </td>
                 </tr>
-             }
+            }
         </tbody>
     </table>
     <div>
         <a asp-action="Create">添加</a>
     </div>
+
+    <div class="card-deck">
+        @foreach (var i in Model.Students)
+        {
+            <div class="card m-3">
+                <div class="card-header">
+                    <h3>@i.Name</h3>
+                </div>
+                <img class="card-img-top" src="~/images/001.jpg" />
+                <div class="card-footer text-center">                
+                    <a href="#" class="btn btn-primary">查看</a>
+                    <a href="#" class="btn btn-primary">编辑</a>
+                    <a href="#" class="btn btn-danger">删除</a>
+                </div>              
+            </div>
+        }
+    </div>
+
+
+
+
 
 </body>
 </html>
