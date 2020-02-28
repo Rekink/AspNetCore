@@ -99,12 +99,14 @@ namespace StudyManagement.Controllers
                 {
                     FirstName = student.FirstName,
                     LastName = student.LastName,
-                    BirthDate = student.BirthDate,
-                    Gender = student.Gender
+                    Gender = student.Gender,
+                    BirthDate = student.BirthDate,              
+                    Email = student.Email,
+                    ClassName = student.ClassName,                  
                 };
 
                 var newStu = _repository.Add(stu);
-
+                // 防止重复Post 重定向
                 return RedirectToAction(nameof(Detail), new { id = newStu.Id });
             }
            

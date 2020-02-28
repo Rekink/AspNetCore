@@ -228,7 +228,7 @@ TagHelper使用
 如果提交方法使用Student类型作为Model<br>
 MVC框架会想尽办法在提交的信息里面找Id属性<br>
 最后导致出现意想不到的状况<br>
-因此需要创建与View 提交的 Model 属性一致的 Input Model
+因此需要创建与View 提交的 Model 属性一致的 Input Model（StudentCreateViewModel）
 
 * 防止重复Post
 使用AddSingleton注册服务时，<br>
@@ -275,6 +275,9 @@ http://localhost:64574/home/Detail/5
 [Required]
 [Display(Name = "名"), MaxLength(10)]
 [DataType(DataType.Password)]
+[Display(Name = "邮箱")]
+[RegularExpression(@"\w + ([-+.]\w +)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+ErrorMessage ="邮箱格式不正确")]
 ```
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,12 +11,15 @@ namespace StudyManagement.Model
         女=0,
         男=1
     }
-    public enum Class
+    public enum ClassNameEnum
     {
-        未知 = 0,
-        一年级 = 1,
-        二年级 = 2,
-        三年级 = 3,
-            
+        [Display(Name = "未选择")]
+        None,
+        [Display(Name = "一年级")]
+        FirstGrade,
+        [Display(Name = "二年级")]
+        SecondGrade,
+        [Display(Name = "三年级")]
+        ThirdGrade,            
     }
 }

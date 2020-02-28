@@ -14,13 +14,13 @@ namespace StudyManagement.Model
       
         public string LastName { get; set; }
      
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
 
         public DateTime BirthDate { get; set; }
 
         public string Email { get; set; }
 
-        public string ClassName { get; set; }
+        public ClassNameEnum? ClassName { get; set; }
 
     }
 }

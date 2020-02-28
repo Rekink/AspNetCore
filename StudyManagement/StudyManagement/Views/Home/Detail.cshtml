@@ -1,65 +1,38 @@
 ﻿@model Student
+        
 @{
-    Layout = null;
+    ViewBag.Title = "学生详情";
 }
 
-<!DOCTYPE html>
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header">
+                <h2>@Model.FirstName @Model.LastName</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Detail</title>
-</head>
-<body>
-    <h1>学生详细信息</h1>
-    <div class="row justify-content-center m-3">
-        <div class="col-sm-8">
-            <div class="card">
-                <div class="card-header">
-                    <h2>@Model.FirstName @Model.LastName</h2>
-
-                    <div class="card-body text-center">
-                        <img class="card-img-top" src="~/images/002.jpg" />
-                        <h4>学生ID：@Model.Id</h4>
-                        <h4>性别：@Model.Gender</h4>
-                        <h4>
-                            出生日期：@Model.BirthDate.ToString("yyy-MM-dd")
-                        </h4>
-                        <h4>班级名称：@Model.ClassName</h4>
-                        <h4>邮箱：@Model.Email</h4>
-                    </div>
-                    <div class="card-footer text-center">
-                        <a href="#" class="btn-primary">返回</a>
-                        <a href="#" class="btn-primary">编辑</a>
-                        <a href="#" class="btn-danger">删除</a>
-                    </div>
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="~/images/002.jpg" />
+                    <h4>学生ID：@Model.Id</h4>
+                    <h4>性别：@Model.Gender</h4>
+                    <h4>
+                        出生日期：@Model.BirthDate.ToString("yyy-MM-dd")
+                    </h4>
+                    <h4>班级名称：@Model.ClassName</h4>
+                    <h4>邮箱：@Model.Email</h4>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Index" class="btn btn-primary">返回</a>
+                    @*<a href="#" class="btn btn-primary">返回</a>*@
+                    <a href="#" class="btn btn-primary">编辑</a>
+                    <a href="#" class="btn btn-danger">删除</a>
                 </div>
             </div>
         </div>
-
     </div>
 
+</div>
 
-    <h2>无样式</h2>
-    <div>
-        <div>ID:@Model.Id</div>
-        <div>
-            姓名：@Model.FirstName @Model.LastName
-        </div>
-        <div>
-            性别：@Model.Gender
-        </div>
-        <div>
-            班级：@Model.ClassName
-        </div>
-        <div>
-            出生日期：@Model.BirthDate.ToString("yyy-MM-dd")
-        </div>
-        <div>
-            邮箱：@Model.Email
-        </div>
-        <a asp-action="Index">返回到Home</a>
-    </div>
 
-</body>
-</html>
+
+
+

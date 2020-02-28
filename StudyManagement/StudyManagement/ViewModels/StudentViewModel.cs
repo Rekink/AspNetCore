@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StudyManagement.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace StudyManagement.ViewModels
 
         public string Name { get; set; }
 
-        public string ClassName { get; set; }
+        public ClassNameEnum? ClassName { get; set; }
 
         public string Email { get; set; }
 

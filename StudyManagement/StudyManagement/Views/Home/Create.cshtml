@@ -1,37 +1,76 @@
 ﻿
 @model StudentCreateViewModel
 
-<h1>创建学生信息</h1>
-<form method="post">
+@{ 
+    ViewBag.Title = "创建学生信息";
+}
 
-    <div>
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" />
-        <span asp-validation-for="FirstName"></span>
+<form asp-controller="home" asp-action="Create" method="post" class="mt-3">
+    <div class="form-group row">
+        <label asp-for="FirstName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="FirstName" class="form-control" placeholder="请输入名字" />
+            @*//显示FirstName是否验证通过*@
+            <span asp-validation-for="FirstName"  class="text-danger"></span>
+        </div>
+       
     </div>
 
-    <div>
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" />
-        <span asp-validation-for="LastName"></span>
+    <div class="form-group row">
+        <label asp-for="LastName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="LastName" class="form-control" placeholder="请输入姓氏" />
+            @*//显示LastName是否验证通过*@
+            <span asp-validation-for="LastName"  class="text-danger"></span>
+        </div>
     </div>
 
-    <div>
-        <label asp-for="BirthDate"></label>
-        <input asp-for="BirthDate" type="date" />
-        <span asp-validation-for="BirthDate"></span>
+    <div class="form-group row">
+        <label asp-for="Gender" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<Gender>()" class="custom-select mr-sm-2">
+                <option value="">请选择</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
     </div>
 
-    <div>
-        <label asp-for="Gender"></label>
-        <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<Gender>()"></select>
+    <div class="form-group row">
+        <label asp-for="BirthDate" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="BirthDate" type="date" />
+            <span asp-validation-for="BirthDate"  class="text-danger"></span>
+        </div>
+         
     </div>
 
-    <div asp-validation-summary="All"></div>
+    <div class="form-group row">
+        <label asp-for="ClassName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <select asp-for="ClassName" asp-items="@Html.GetEnumSelectList<ClassNameEnum>()" class="custom-select mr-sm-2">
+                <option value="">请选择</option>
+            </select>
+            <span asp-validation-for="ClassName" class="text-danger"></span>
+        </div>
+    </div>
 
-    @*<input type="text" name="FirstName" value="" />*@
-    @*<input type="text" name="LastName" value="" />*@
+    <div class="form-group row">
+        <label asp-for="Email" class="col-sm-2 col-form-label" ></label>
+        <div class="col-sm-10">
+            <input asp-for="Email" class="form-control" placeholder="请输入邮箱"/>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
 
-    <button type="submit" name="save">保存</button>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary" name="save">创建</button>
+        </div>
+    </div>
+
+    @*//显示验证属性*@
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+     
 
 </form>
