@@ -19,9 +19,7 @@ namespace StudyManagement.ViewModels
         public string LastName { get; set; }
 
         [Required]
-        [Display(Name = "性别")]
-        // 密码不可见
-        [DataType(DataType.Password)]
+        [Display(Name = "性别")]    
         public Gender? Gender { get; set; }
       
         [Display(Name = "出生日期")]

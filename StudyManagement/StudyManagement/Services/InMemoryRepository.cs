@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StudyManagement.Services
 {
-    public class InMemoryRepository : IRepository<Student>
+    public class InMemoryRepository : IStudentRepository<Student>
     {
         private readonly List<Student> _student;
 
@@ -55,6 +55,16 @@ namespace StudyManagement.Services
             return stu;
         }
 
+        public Student Delete(int id)
+        {
+            Student student = _student.FirstOrDefault(s => s.Id == id);
+            if (student!=null)
+            {
+                _student.Remove(student);
+            }
+            return student;
+        }
+
         public IEnumerable<Student> GetAll()
         {        
             return _student;
@@ -63,6 +73,21 @@ namespace StudyManagement.Services
         public Student GetById(int id)
         {
             return _student.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Student Update(Student updateStudent)
+        {
+            Student student = _student.FirstOrDefault(s=>s.Id==updateStudent.Id);
+            if (student != null)
+            {
+                student.FirstName = updateStudent.FirstName;
+                student.LastName = updateStudent.LastName;
+                student.Gender = updateStudent.Gender;
+                student.Email = updateStudent.Email;
+                student.BirthDate = updateStudent.BirthDate;
+                student.ClassName = updateStudent.ClassName;
+            }
+            return student;
         }
     }
 }

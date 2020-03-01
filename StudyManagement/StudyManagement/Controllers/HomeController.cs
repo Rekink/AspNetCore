@@ -15,9 +15,9 @@ namespace StudyManagement.Controllers
     //public class HomeController 
     public class HomeController : Controller
     {
-        private readonly IRepository<Student> _repository;
+        private readonly IStudentRepository<Student> _repository;
 
-        public HomeController(IRepository<Student> repository)
+        public HomeController(IStudentRepository<Student> repository)
         {
             _repository = repository;
         }
