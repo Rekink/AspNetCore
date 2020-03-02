@@ -2,6 +2,7 @@
         
 @{
     ViewBag.Title = "学生详情";
+    var photoPath = "~/images/" + (Model.PhotoPath ?? "001.jpg");
 }
 
 <div class="row justify-content-center m-3">
@@ -11,7 +12,8 @@
                 <h2>@Model.FirstName @Model.LastName</h2>
 
                 <div class="card-body text-center">
-                    <img class="card-img-top" src="~/images/002.jpg" />
+                    @*<img class="card-img-top" src="~/images/002.jpg" />*@
+                    <img class="card-img-top" src="@photoPath" asp-append-version="true"/>
                     <h4>学生ID：@Model.Id</h4>
                     <h4>性别：@Model.Gender</h4>
                     <h4>
@@ -20,12 +22,14 @@
                     <h4>班级名称：@Model.ClassName</h4>
                     <h4>邮箱：@Model.Email</h4>
                 </div>
+
                 <div class="card-footer text-center">
                     <a asp-action="Index" class="btn btn-primary">返回</a>
                     @*<a href="#" class="btn btn-primary">返回</a>*@
                     <a href="#" class="btn btn-primary">编辑</a>
                     <a href="#" class="btn btn-danger">删除</a>
                 </div>
+
             </div>
         </div>
     </div>

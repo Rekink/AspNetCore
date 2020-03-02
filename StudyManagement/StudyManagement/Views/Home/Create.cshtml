@@ -90,6 +90,7 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('.custom-file-input').on("change", function () {
+                    //C: \fakepath\wallhaven - 710582.jpg
                     console.log($(this).val());
                     var fileName = $(this).val().split("\\").pop();
                     $(this).next(".custom-file-label").html(fileName);

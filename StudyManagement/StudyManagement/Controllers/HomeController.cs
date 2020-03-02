@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StudyManagement.Model;
@@ -17,9 +19,14 @@ namespace StudyManagement.Controllers
     {
         private readonly IStudentRepository<Student> _repository;
 
-        public HomeController(IStudentRepository<Student> repository)
+        public readonly HostingEnvironment hostingEnvironment;
+
+        public HomeController(
+            IStudentRepository<Student> repository,
+            HostingEnvironment hostingEnvironment)
         {
             _repository = repository;
+            this.hostingEnvironment = hostingEnvironment;
         }
         //public string Index()
         //{
@@ -38,7 +45,8 @@ namespace StudyManagement.Controllers
                 //Name = $"{x.FirstName} {x.LastName}",
                 //Age = DateTime.Now.Subtract(x.BirthDate).Days / 365,
                 Email = x.Email,
-                ClassName = x.ClassName
+                ClassName = x.ClassName,
+                PhotoPath = x.PhotoPath
             });
 
             var homeModel = new HomeIndexViewModel
@@ -95,6 +103,21 @@ namespace StudyManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                string uploadFileName = null;
+
+                if (student.Photos != null)
+                {
+                    // 获取文件存放位置wwwroot/images
+                    string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    // 保存文件目录
+                    uploadFileName = Guid.NewGuid().ToString() + "_" + student.Photos.FileName;
+                    // 文件的完整目录
+                    string filePath = Path.Combine(uploadFolder,uploadFileName);
+                    // 将文件流复制到指定文件夹下
+                    student.Photos.CopyTo(new FileStream(filePath,FileMode.Create));
+
+                }
+
                 var stu = new Student
                 {
                     FirstName = student.FirstName,
@@ -102,7 +125,8 @@ namespace StudyManagement.Controllers
                     Gender = student.Gender,
                     BirthDate = student.BirthDate,              
                     Email = student.Email,
-                    ClassName = student.ClassName,                  
+                    ClassName = student.ClassName, 
+                    PhotoPath= uploadFileName
                 };
 
                 var newStu = _repository.Add(stu);

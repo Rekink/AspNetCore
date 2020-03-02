@@ -16,6 +16,7 @@ namespace StudyManagement.ViewModels
 
         public string Email { get; set; }
 
-       
+        public string PhotoPath { get; set; }
+
     }
 }

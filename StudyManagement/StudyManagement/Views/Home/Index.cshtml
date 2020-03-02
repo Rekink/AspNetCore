@@ -4,7 +4,6 @@
 
 @model StudyManagement.ViewModels.HomeIndexViewModel
 
-
 @{
 
     ViewBag.Title = "";
@@ -14,24 +13,27 @@
 <div class="card-deck">
     @foreach (var i in Model.Students)
     {
+        var photoPath = "~/images/" + (i.PhotoPath ?? "001.jpg");
+
         <div class="card m-3">
             <div class="card-header">
                 <h3>@i.Name</h3>
             </div>
-            <img class="card-img-top" src="~/images/001.jpg" asp-append-version="true" />
+
+            <img class="card-img-top image-thumbnail" src="@photoPath" asp-append-version="true" />
+           
             <div class="card-footer text-center">
                 <a asp-controller="Home" asp-action="Detail" asp-Route-id="@i.Id" class="btn btn-primary">查看</a>
                 @* <a href="#" class="btn btn-primary">查看</a>*@
                 <a href="#" class="btn btn-primary">编辑</a>
                 <a href="#" class="btn btn-danger">删除</a>
             </div>
+
         </div>
     }
-
     
 </div>
+
 <div class="card-footer">
     <a asp-action="Create">添加</a>
-
-
 </div>
