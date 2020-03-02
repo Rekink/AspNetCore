@@ -23,8 +23,13 @@ using StudyManagement.ViewModels;
 
 #line default
 #line hidden
+#line 4 "E:\AspNetCore\AspNetCore\StudyManagement\StudyManagement\Views\_ViewImports.cshtml"
+using StudyManagement.Services;
+
+#line default
+#line hidden
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7091c65830b0329e613be026ede8a57552863778", @"/Views/_ViewStart.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7182df2c3aadae7658a428dfd474c2840f8865c9", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"8ce51a073e9d1c086a760539668e2da6e3f51764", @"/Views/_ViewImports.cshtml")]
     public class Views__ViewStart : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998
