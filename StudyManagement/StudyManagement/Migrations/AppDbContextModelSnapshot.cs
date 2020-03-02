@@ -41,6 +41,8 @@ namespace StudyManagement.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
+                    b.Property<string>("PhotoPath");
+
                     b.HasKey("Id");
 
                     b.ToTable("Students");

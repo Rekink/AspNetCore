@@ -1,4 +1,5 @@
-﻿using StudyManagement.Model;
+﻿using Microsoft.AspNetCore.Http;
+using StudyManagement.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 namespace StudyManagement.ViewModels
 {
     public class StudentCreateViewModel
-    {
-        [Display(Name = "名字")]
+    {    
         [Required(ErrorMessage ="请输入名字")]
+        [Display(Name = "名字")]
         [MaxLength(50,ErrorMessage ="名字长度不超过50个字符")]
         public string FirstName { get; set; }
 
@@ -35,6 +36,7 @@ namespace StudyManagement.ViewModels
         [Display(Name = "班级")]
         public ClassNameEnum? ClassName { get; set; }
 
-
+        [Display(Name = "图片")]
+        public IFormFile Photos { get; set; }
     }
 }

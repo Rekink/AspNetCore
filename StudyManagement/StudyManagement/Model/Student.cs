@@ -26,6 +26,8 @@ namespace StudyManagement.Model
         [Required(ErrorMessage = "请输入邮箱")]
         public string Email { get; set; }
 
-       
+        public string PhotoPath { get; set; }
+        
+
     }
 }

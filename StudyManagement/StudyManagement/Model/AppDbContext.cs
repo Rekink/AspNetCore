@@ -24,28 +24,30 @@ namespace StudyManagement.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // 
-            modelBuilder.Entity<Student>().HasData(
-                new Student
-                {
-                    Id = 1,
-                    FirstName = "han",
-                    LastName = "zhou",
-                    Gender = Gender.男,
-                    BirthDate = new DateTime(1991, 5, 10),
-                    ClassName = ClassNameEnum.FirstGrade,
-                    Email = "rekink@yeah.net"
-                },
-                new Student
-                {
-                    Id = 2,
-                    FirstName = "ke",
-                    LastName = "zhou",
-                    Gender = Gender.男,
-                    BirthDate = new DateTime(1991, 5, 10),
-                    ClassName = ClassNameEnum.ThirdGrade,
-                    Email = "rekinz@qq.com"
-                });
+            // 添加种子数据
+            modelBuilder.Seed();
+
+            //modelBuilder.Entity<Student>().HasData(
+            //    new Student
+            //    {
+            //        Id = 1,
+            //        FirstName = "han",
+            //        LastName = "zhou",
+            //        Gender = Gender.男,
+            //        BirthDate = new DateTime(1991, 5, 10),
+            //        ClassName = ClassNameEnum.FirstGrade,
+            //        Email = "rekink@yeah.net"
+            //    },
+            //    new Student
+            //    {
+            //        Id = 2,
+            //        FirstName = "ke",
+            //        LastName = "zhou",
+            //        Gender = Gender.男,
+            //        BirthDate = new DateTime(1991, 5, 10),
+            //        ClassName = ClassNameEnum.ThirdGrade,
+            //        Email = "rekinz@qq.com"
+            //    });
             base.OnModelCreating(modelBuilder);
         }
 

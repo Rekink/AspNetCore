@@ -283,7 +283,193 @@ ErrorMessage ="邮箱格式不正确")]
 
 ### EF Core
 
+#### 实现DbContext
+* 将应用程序的配置传递给DbContext
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDbContextPool<AppDbContext>(
+        options => options.UseSqlServer(_configuration.GetConnectionString("StudentDBConnection"))
+        );
 
+    services.AddScoped<IStudentRepository<Student>, StudentRepository>();
+
+    // 一般用这个，功能多
+    services.AddMvc();
+}
+```
+* DbSet：对使用到的每个实体添加 DbSet<TEntity> 属性<br>
+通过DbSet属性来进行增删改查操作,对DbSet采用Linq查询的时候<br>
+EFCore自动将其转换为SQL语句
+```c#
+public class AppDbContext : DbContext
+{
+    /// <summary>
+    /// 将应用程序的配置传递给DbContext
+    /// </summary>
+    /// <param name="option"></param>
+    public AppDbContext(DbContextOptions<AppDbContext> option) : base(option)
+    {
+
+    }
+
+    // 对要使用到的每个实体都添加 DbSet<TEntity> 属性
+    // 通过DbSet属性来进行增删改查操作
+    // 对DbSet采用Linq查询的时候，EFCore自动将其转换为SQL语句
+    public DbSet<Student> Students { get; set; }
+
+    // 重写
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // 添加种子数据
+        modelBuilder.Seed();
+
+        //modelBuilder.Entity<Student>().HasData(
+        //    new Student
+        //    {
+        //        Id = 1,
+        //        FirstName = "han",
+        //        LastName = "zhou",
+        //        Gender = Gender.男,
+        //        BirthDate = new DateTime(1991, 5, 10),
+        //        ClassName = ClassNameEnum.FirstGrade,
+        //        Email = "rekink@yeah.net"
+        //    });
+        base.OnModelCreating(modelBuilder);
+    }
+}
+```
+* 将应用程序的配置传递给DbContext，主要是数据库连接字符串
+```c#
+ services.AddDbContextPool<AppDbContext>(
+            options => options.UseSqlServer(_configuration.GetConnectionString("StudentDBConnection"))
+            );
+
+services.AddScoped<IStudentRepository<Student>, StudentRepository>();
+
+
+```
+#### 实现仓储
+```c#
+//定义一个IStudentRepository的接口，并定义一个泛型
+//泛型规定了必须是:class 这样的类或者子类 
+public interface IStudentRepository<T> where T : class
+{
+    IEnumerable<T> GetAll();
+    T GetById(int id);
+    T Add(T stu);
+    T Update(T updateStudent);
+    T Delete(int id);
+}
+
+public class StudentRepository : IStudentRepository<Student>
+{
+    public StudentRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public AppDbContext _context { get; }
+
+    public Student Add(Student stu)
+    {
+        _context.Students.Add(stu);
+        _context.SaveChanges();
+        return stu;
+    }
+
+    public Student Delete(int id)
+    {
+        Student student = _context.Students.Find(id);
+        if (student!=null)
+        {
+            _context.Students.Remove(student);
+            _context.SaveChanges();
+        }
+        return student;
+    }
+
+    public Student Update(Student updateStudent)
+    {
+        //打标签
+        var student = _context.Students.Attach(updateStudent);
+        student.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        _context.SaveChanges();
+        return updateStudent;
+    }
+
+    IEnumerable<Student> IStudentRepository<Student>.GetAll()
+    {
+        return _context.Students;
+    }
+
+    Student IStudentRepository<Student>.GetById(int id)
+    {
+        return _context.Students.Find(id);
+    }
+}
+```
+#### EFCore常用指令
+* Add-Migration：添加迁移记录
+* Update-Database：更新数据库
+数据迁移，用于同步领域模型和数据库架构设计，使它们保持一致<br>
+程序包管理控制台/PM:
+* 创建新的迁移记录Add-Migration SeedData添加种子数据
+* 更新数据库架构Update-DataBase
+* 删除未应用到数据库迁移记录(未执行update操作)  Remove-Migration
+* 数据库迁移记录信息保存在EFMigrationHistory文件中行
+* 模型快照 ModelSnapshot 用于确定将在下一次迁移发生的变化
+
+添加种子数据，重写DbContext的OnModelCreating方法
+```c#
+ protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    // 添加种子数据
+    modelBuilder.Seed();
+
+    //modelBuilder.Entity<Student>().HasData(
+    //    new Student
+    //    {
+    //        Id = 1,
+    //        FirstName = "han",
+    //        LastName = "zhou",
+    //        Gender = Gender.男,
+    //        BirthDate = new DateTime(1988, 5, 10),
+    //        ClassName = ClassNameEnum.FirstGrade,
+    //        Email = "rekink@yeah.net"
+    //    });
+    base.OnModelCreating(modelBuilder);
+}
+
+// 扩展方法Seed
+public static class ModelBuilderExtensions
+{
+    public static void Seed(this ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Student>().HasData(
+            new Student
+            {
+                Id = 1,
+                FirstName = "han",
+                LastName = "zhou",
+                Gender = Gender.男,
+                BirthDate = new DateTime(1991, 5, 10),
+                ClassName = ClassNameEnum.FirstGrade,
+                Email = "rekink@yeah.net"
+            },
+            new Student
+            {
+                Id = 2,
+                FirstName = "ke",
+                LastName = "zhou",
+                Gender = Gender.男,
+                BirthDate = new DateTime(1991, 5, 10),
+                ClassName = ClassNameEnum.ThirdGrade,
+                Email = "rekinz@qq.com"
+            });
+    }
+}
+```
 
 
 
