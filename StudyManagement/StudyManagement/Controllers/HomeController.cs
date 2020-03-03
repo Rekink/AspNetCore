@@ -99,35 +99,25 @@ namespace StudyManagement.Controllers
         // 用于防止 CSRF（跨站请求伪造）
         // 验证Token
         [ValidateAntiForgeryToken]
-        public IActionResult Create(StudentCreateViewModel student)
+        public IActionResult Create(StudentCreateViewModel studentCreate)
         {
             if (ModelState.IsValid)
             {
                 string uploadFileName = null;
 
-                if (student.Photos != null&& student.Photos.Count>0)
-                {
-                    foreach (var photo in student.Photos)
-                    {
-                        // 获取文件存放位置wwwroot/images
-                        string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                        // 保存文件目录，确保文件名唯一，文件名添加Guid
-                        uploadFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                        // 文件的完整目录
-                        string filePath = Path.Combine(uploadFolder, uploadFileName);
-                        // 将文件流复制到指定文件夹下
-                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                    }
+                if (studentCreate.Photos != null&& studentCreate.Photos.Count>0)
+                {          
+                    uploadFileName = DealUploadFile(studentCreate);
                 }
 
                 var stu = new Student
                 {
-                    FirstName = student.FirstName,
-                    LastName = student.LastName,
-                    Gender = student.Gender,
-                    BirthDate = student.BirthDate,              
-                    Email = student.Email,
-                    ClassName = student.ClassName, 
+                    FirstName = studentCreate.FirstName,
+                    LastName = studentCreate.LastName,
+                    Gender = studentCreate.Gender,
+                    BirthDate = studentCreate.BirthDate,              
+                    Email = studentCreate.Email,
+                    ClassName = studentCreate.ClassName, 
                     PhotoPath= uploadFileName
                 };
 
@@ -191,20 +181,8 @@ namespace StudyManagement.Controllers
                         string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", studentEdit.ExistingPhotoPath);
                         System.IO.File.Delete(filePath);
                     }
-
-                    string uploadFileName = null;
-                    foreach (var photo in studentEdit.Photos)
-                    {
-                        // 获取文件存放位置wwwroot/images
-                        string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                        // 保存文件目录，确保文件名唯一，文件名添加Guid
-                        uploadFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                        // 文件的完整目录
-                        string filePath = Path.Combine(uploadFolder, uploadFileName);
-                        // 将文件流复制到指定文件夹下
-                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                    }
-                    student.PhotoPath = uploadFileName;
+                    
+                    student.PhotoPath = DealUploadFile(studentEdit);
                 }
 
                 // 保存到数据库
@@ -215,7 +193,33 @@ namespace StudyManagement.Controllers
             return View();
         }
 
+        private string DealUploadFile(StudentCreateViewModel student)
+        {
+            string uploadFileName = null;
 
+            if (student.Photos.Count > 0)
+            {
+                foreach (var photo in student.Photos)
+                {
+                    // 获取文件存放位置wwwroot/images
+                    string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    // 保存文件目录，确保文件名唯一，文件名添加Guid
+                    uploadFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                    // 文件的完整目录
+                    string filePath = Path.Combine(uploadFolder, uploadFileName);
+
+                    // 数据流处理
+                    // 使用非托管资源，需要手动释放
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        // 将文件流复制到指定文件夹下
+                        // 使用IFormFile接口的CopyTo()方法将文件复制到指定文件夹
+                        photo.CopyTo(fileStream);
+                    }
+                }
+            }
+            return uploadFileName;
+        }
 
 
     }
