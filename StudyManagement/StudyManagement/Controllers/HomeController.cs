@@ -105,17 +105,19 @@ namespace StudyManagement.Controllers
             {
                 string uploadFileName = null;
 
-                if (student.Photos != null)
+                if (student.Photos != null&& student.Photos.Count>0)
                 {
-                    // 获取文件存放位置wwwroot/images
-                    string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                    // 保存文件目录
-                    uploadFileName = Guid.NewGuid().ToString() + "_" + student.Photos.FileName;
-                    // 文件的完整目录
-                    string filePath = Path.Combine(uploadFolder,uploadFileName);
-                    // 将文件流复制到指定文件夹下
-                    student.Photos.CopyTo(new FileStream(filePath,FileMode.Create));
-
+                    foreach (var photo in student.Photos)
+                    {
+                        // 获取文件存放位置wwwroot/images
+                        string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                        // 保存文件目录，确保文件名唯一，文件名添加Guid
+                        uploadFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                        // 文件的完整目录
+                        string filePath = Path.Combine(uploadFolder, uploadFileName);
+                        // 将文件流复制到指定文件夹下
+                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                    }
                 }
 
                 var stu = new Student

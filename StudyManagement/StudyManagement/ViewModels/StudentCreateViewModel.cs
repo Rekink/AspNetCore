@@ -37,6 +37,6 @@ namespace StudyManagement.ViewModels
         public ClassNameEnum? ClassName { get; set; }
 
         [Display(Name = "图片")]
-        public IFormFile Photos { get; set; }
+        public List<IFormFile> Photos { get; set; }
     }
 }
