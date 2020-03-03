@@ -471,8 +471,48 @@ public static class ModelBuilderExtensions
 }
 ```
 
+#### 视图View
 
+* _Layout.cshtml：外层模版，页面共用固定区域
 
+* _ViewStart.cshtml：存放所有视图文件的公共代码,<br>
+_ViewStart.cshtml文件所在目录下的每个视图文件开始渲染，先执行这个文件的内容<br>
+一般直接放在Views目录下，全局生效，可以放在各个子文件夹下，这样可以覆盖全局的_ViewStart.cshtml
+
+* _ViewImports.cshtml：引用命名空间、注册模型、引入TagHelper等等<br>
+作用于其所在文件夹及子文件夹内的视图文件。
+
+* 视图节点 Section
+在布局视图里渲染节点
+```c#
+ @*布局视图里渲染节点*@
+ @*false代表可有可无*@
+ @RenderSection("Scripts", required: false)
+```
+在一般视图里定义节点
+```c#
+@section Scripts{ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //绑定事件
+            $('.custom-file-input').on("change", function () {
+                //单文件上传
+                //C: \fakepath\wallhaven - 710582.jpg
+                //console.log($(this).val());
+                //var fileName = $(this).val().split("\\").pop();
+                //$(this).next(".custom-file-label").html(fileName);
+                //多文件上传
+                var fileLable = $(this).next(".custom-file-label");
+                var files = $(this)[0].files;
+                if (files.length > 1) {
+                    fileLable.html('你已选择 ' + files.length + ' 个文件');
+                } else if (files.length == 1) {
+                    fileLable.html(files[0].name);
+                }
+            });
+        });
+    </script>
+```
 
 
 
