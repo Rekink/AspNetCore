@@ -143,6 +143,80 @@ namespace StudyManagement.Controllers
 
             //return Content(JsonConvert.SerializeObject(student));
         }
+        /// <summary>
+        /// 编辑视图
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ViewResult Edit(int id)
+        {
+            Student student = _repository.GetById(id);
+            //if (student!=null)
+            //{
+                StudentEditViewModel studentEditViewModel = new StudentEditViewModel
+                {
+                    Id = student.Id,
+                    FirstName = student.FirstName,
+                    LastName = student.LastName,
+                    Gender = student.Gender,
+                    ClassName = student.ClassName,
+                    Email = student.Email,
+                    BirthDate = student.BirthDate,
+                    ExistingPhotoPath=student.PhotoPath
+                };
+                return View(studentEditViewModel);
+            //}
+           
+        }
+
+        [HttpPost]
+        public IActionResult Edit(StudentEditViewModel studentEdit)
+        {          
+            if (ModelState.IsValid)
+            {
+                Student student = _repository.GetById(studentEdit.Id);
+                student.FirstName = student.FirstName;
+                student.LastName = student.LastName;
+                student.Gender = student.Gender;
+                student.ClassName = student.ClassName;
+                student.Email = student.Email;
+                student.BirthDate = student.BirthDate;
+
+                if (studentEdit.Photos.Count > 0)
+                {
+                    if (studentEdit.ExistingPhotoPath != null)
+                    {
+                        // 删除原先的图片
+                        string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", studentEdit.ExistingPhotoPath);
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    string uploadFileName = null;
+                    foreach (var photo in studentEdit.Photos)
+                    {
+                        // 获取文件存放位置wwwroot/images
+                        string uploadFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                        // 保存文件目录，确保文件名唯一，文件名添加Guid
+                        uploadFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                        // 文件的完整目录
+                        string filePath = Path.Combine(uploadFolder, uploadFileName);
+                        // 将文件流复制到指定文件夹下
+                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                    }
+                    student.PhotoPath = uploadFileName;
+                }
+
+                // 保存到数据库
+                Student updataStudent=  _repository.Update(student);
+
+                return RedirectToAction(nameof(Detail), new { id = updataStudent.Id });
+            }
+            return View();
+        }
+
+
+
 
     }
 }

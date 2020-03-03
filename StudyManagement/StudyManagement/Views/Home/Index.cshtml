@@ -23,9 +23,11 @@
             <img class="card-img-top image-thumbnail" src="@photoPath" asp-append-version="true" />
            
             <div class="card-footer text-center">
-                <a asp-controller="Home" asp-action="Detail" asp-Route-id="@i.Id" class="btn btn-primary">查看</a>
+                <a asp-controller="Home" asp-action="Detail" asp-route-id="@i.Id" class="btn btn-primary">查看</a>
                 @* <a href="#" class="btn btn-primary">查看</a>*@
-                <a href="#" class="btn btn-primary">编辑</a>
+                
+                <a asp-controller="home" asp-action="edit" asp-route-id="@i.Id" class="btn btn-primary">编辑</a>
+                
                 <a href="#" class="btn btn-danger">删除</a>
             </div>
 

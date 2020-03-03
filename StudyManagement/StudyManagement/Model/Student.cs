@@ -28,6 +28,5 @@ namespace StudyManagement.Model
 
         public string PhotoPath { get; set; }
         
-
     }
 }
