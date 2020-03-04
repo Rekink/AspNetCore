@@ -46,7 +46,7 @@ namespace StudyManagement.Controllers
                 //Age = DateTime.Now.Subtract(x.BirthDate).Days / 365,
                 Email = x.Email,
                 ClassName = x.ClassName,
-                PhotoPath = x.PhotoPath
+                //PhotoPath = x.PhotoPath
             });
 
             var homeModel = new HomeIndexViewModel
@@ -87,6 +87,7 @@ namespace StudyManagement.Controllers
 
             //return Content(id.ToString());
         }
+        
         // 默认HttpGet
         [HttpGet]
         public IActionResult Create()
