@@ -287,12 +287,12 @@ ErrorMessage ="邮箱格式不正确")]
 #### EF Core将类映射到数据库
 EF Core将类映射为数据库中的表. 因此你需要创建一个实体类,或者你已有一个数据库则需要匹配数据库表<br> 
 有很多的规则和配置, 下图给出的是映射到数据库表的实体类的一般格式
- ![Image text](https://github.com/Rekink/AspNetCore/tree/master/pic/map.jpg)
+ ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/map.png)
 
 
 #### 数据库上下文DbContext 
 控制台应用程序的DbContext: 覆盖应用程序的DbContext的OnConfiguring方法,提供EF Core需要的数据库类型和连接字符串等其他信息. 
-![Image text](https://github.com/Rekink/AspNetCore/tree/master/pic/config.jpg)
+![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/config.png)
 
  这种方法的缺点是它的连接字符串是固定的,不利于单元测试，而且对于不同的环境（开发,测试,生产）我们会使用不同的数据库<br>
 
@@ -312,7 +312,7 @@ EF Core将类映射为数据库中的表. 因此你需要创建一个实体类,�
 
 #### EF Core工作机制
 
-![Image text](https://github.com/Rekink/AspNetCore/tree/master/pic/process.jpg)
+![Image text](https://github.com/Rekink/AspNetCore/png/master/pic/process.png)
 
 * EF Core查看DbContext并找到所有公共的DbSet属性,并使用属性名为表定义初始名称.
 
