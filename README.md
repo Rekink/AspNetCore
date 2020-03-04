@@ -285,21 +285,23 @@ ErrorMessage ="邮箱格式不正确")]
 ### EF Core
 
 #### EF Core将类映射到数据库
-EF Core将类映射为数据库中的表. 因此你需要创建一个实体类,或者你已有一个数据库则需要匹配数据库表<br> 
+EF Core将类映射为数据库中的表. 每一张表对应创建一个实体类,或者你已有一个数据库则需要匹配数据库表<br> 
 有很多的规则和配置, 下图给出的是映射到数据库表的实体类的一般格式
  ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/map.png)
 
 
 #### 数据库上下文DbContext 
-控制台应用程序的DbContext: 覆盖应用程序的DbContext的OnConfiguring方法,提供EF Core需要的数据库类型和连接字符串等其他信息. 
+控制台应用程序的DbContext: 覆盖应用程序的DbContext的OnConfiguring方法,提供EF Core需要的数据库类型和连接字符串等其他信息<br>
+
 ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/config.png)
 
- 这种方法的缺点是它的连接字符串是固定的,不利于单元测试，而且对于不同的环境（开发,测试,生产）我们会使用不同的数据库<br>
+这种方法的缺点是它的连接字符串是固定的,不利于单元测试，而且对于不同的环境（开发,测试,生产）我们会使用不同的数据库<br>
 
 以下是.net core配置方法
 ```c#
  public void ConfigureServices(IServiceCollection services)
 {
+    // UseSqlServer代表的是SqlServer数据库 
     services.AddDbContextPool<AppDbContext>(
         options => options.UseSqlServer(_configuration.GetConnectionString("StudentDBConnection"))
         );
@@ -311,20 +313,19 @@ EF Core将类映射为数据库中的表. 因此你需要创建一个实体类,�
 ```
 
 #### EF Core工作机制
-
-![Image text](https://github.com/Rekink/AspNetCore/png/master/pic/process.png)
+![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/process.png)
 
 * EF Core查看DbContext并找到所有公共的DbSet属性,并使用属性名为表定义初始名称.
 
 * EF Core查看DbSet的泛型类,查看类的属性构建列名,类型等. 它还会查找类和属性用于提供额外建模配置的特殊Attribute
 
-* EF Core查找DbSet类中引用的其他类. 在我们的例子中Book类有一个对Author类的引用,所以EF Core也会查看它. 它对Author类执行与步骤2相同的操作. 同时它使用类名Author做为表名
+* EF Core查找DbSet类中引用的其他类. 在我们的例子中Book类有一个对Author类的引用,它对Author类执行与步骤2相同的操作. 同时它使用类名Author做为表名
 
-* EF Core运行DbContext的虚方法OnModelCreating, 可以通过重写OnModelCreating方法使用fluent Api进行更多的建模配置
+* EF Core运行DbContext的虚方法OnModelCreating, 可以通过重写OnModelCreating方法进行更多的配置
 
 * EF Core根据收集的信息创建数据库的内部模型,并缓存数据库模式,以便提升访问速度.
 
-以上操作都没有涉及到数据库操作,通过DbSet属性来进行增删改查操作,对DbSet采用Linq查询的时候,EFCore自动将其转换为SQL语句<br>
+以上操作都没有涉及到数据库操作,增删改查等操作都是通过DbSet属性来进行,对DbSet采用Linq查询的时候,EFCore自动将其转换为SQL语句<br>
 
 
 
@@ -366,10 +367,13 @@ public class AppDbContext : DbContext
 
 
 #### EFCore常用指令
+
+程序包管理控制台/PM:
 * Add-Migration：添加迁移记录
 * Update-Database：更新数据库
+
 数据迁移，用于同步领域模型和数据库架构设计，使它们保持一致<br>
-程序包管理控制台/PM:
+
 * 创建新的迁移记录Add-Migration SeedData添加种子数据
 * 更新数据库架构Update-DataBase
 * 删除未应用到数据库迁移记录(未执行update操作)  Remove-Migration
