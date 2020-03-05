@@ -283,6 +283,22 @@ ErrorMessage ="邮箱格式不正确")]
 
 
 ### EF Core
+Entity Framework的全称为ADO.NET Entity Framework，是在ADO.NET上层实现的ORM（对象关系映射）封装<br>
+ ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/EF.png)
+Entity Framework的使用分为以下四步：
+* 连接配置：如何与数据库进行连接。我们可以通过连接字符串或者代码进行设置
+* 关系映射:SSDL存储模型 MSL关系映射 CSDL概念模型              
+* 上下文环境定义：DBContext 可以理解为是一个容器，里面有对象与数据表的映射关系以及对象本身。
+* 数据持久化：数据持久化就是将内存中的概念模型转换为存储模型,以及将存储模型转换为内存中的数据模型的统称。
+
+EF的三种编程模式：
+* DataBase First：开发模式指以数据库设计为基础，并根据数据库自动生成实体数据模型
+* Model First：是指从建立实体数据模型入手，并依据模型生成数据库，从而驱动整个开发流程
+该模式为面向领域的编程模式，优点在于，可以用与设计建模相同的思维来进行代码编写，更符合面向对象的思<br>
+Model First与Database First是互逆的，但最终都是输出数据库和实体数据模型
+* Code First：完全通过手动编码，就可以使用Entity Framewokr技术来实现数据访问。
+该模式的优点在于，支持POCO（Plain Old CLR Objects，简单传统CLR对象），代码整洁，程序员对代码的控制也更灵活自如<br>
+
 
 #### EF Core将类映射到数据库
 EF Core将类映射为数据库中的表. 每一张表对应创建一个实体类,或者你已有一个数据库则需要匹配数据库表<br> 
@@ -297,7 +313,7 @@ EF Core将类映射为数据库中的表. 每一张表对应创建一个实体�
 
 这种方法的缺点是它的连接字符串是固定的,不利于单元测试，而且对于不同的环境（开发,测试,生产）我们会使用不同的数据库<br>
 
-以下是.net core配置方法
+以下是.net core配置方法:配置文件中设置appSettings节点来配置数据库初始化上下文
 ```c#
  public void ConfigureServices(IServiceCollection services)
 {
@@ -366,7 +382,7 @@ public class AppDbContext : DbContext
 ```
 
 
-#### EFCore常用指令
+#### EF Core常用指令
 
 程序包管理控制台/PM:
 * Add-Migration：添加迁移记录
@@ -424,6 +440,65 @@ public static class ModelBuilderExtensions
     }
 }
 ```
+
+#### EF Core存储过程、视图
+
+* DbSet<TEntity>扩展方法FromSql：
+DbSet<TEntity>.FromSql();<br>
+结果一定要是实体类型，就是数据库表映射的模型<br>
+在执行的SQL语句中返回所有列，并且列名必须与实体属性名相匹配，否则执行会出错<br>
+这意味着，执行存储过程返回的结果一定是跟数据库表相关的所有字段<br>
+FromSql方式的结果不能有关联关系数据,相当于不能join ，也返回不了join关联表的数据。
+
+* DbContext有一个Database属性，其包括一个方法ExecuteSqlCommand：
+DbContext.Database.ExecuteSqlCommand()；<br>
+此方法返回一个整数，表示执行的SQL语句影响的行数<br>
+有效的操作是INSERT、UPDATE和DELETE的存储过程，但不能用于返回实体。<br>
+
+
+EF Core是不支持存储过程及视图的映射的,直接通过DbContext是没有办法直接调用到视图的
+```c#
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{           
+    modelBuilder.Query<ViewEntrustWithJyDataTestNumMatchPile>().ToView("View_EntrustWithJyDataTestNumMatchPile");
+}
+
+/// <summary>
+/// 更新委托单已测数量
+/// </summary>
+[UnitOfWork]
+public void UpdateTestNum()
+{
+    var jyList = context.Query<ViewEntrustWithJyDataTestNumMatchPile>().Where(m => m.MeasuredNum != m.oldMeasuredMum).ToList();
+｝
+
+
+// 映射的实体
+/// <summary>
+/// 获取委托单的已测数量（匹配桩号）
+/// </summary>
+public class ViewEntrustWithTestDataTestNumMatchPile
+{
+    /// <summary>
+    /// 委托ID MeasuredNum, EntrustId
+    /// </summary> 
+    public int EntrustId { get; set; }
+    /// <summary>
+    /// 统计已测数量
+    /// </summary> 
+    public int MeasuredNum { get; set; }
+    /// <summary>
+    /// 租户ID
+    /// </summary> 
+    public int? TenantId { get; set; }
+    /// <summary>
+    /// 数据库已测数量
+    /// </summary> 
+    public int oldMeasuredMum { get; set; } 
+}
+```
+
+
 
 
 #### 实现仓储
