@@ -301,6 +301,7 @@ Model First与Database First是互逆的，但最终都是输出数据库和实�
 
 
 #### EF Core将类映射到数据库
+EF Core框架能快速的帮助我们进行常规的数据处理和项目开发<br>
 EF Core将类映射为数据库中的表. 每一张表对应创建一个实体类,或者你已有一个数据库则需要匹配数据库表<br> 
 有很多的规则和配置, 下图给出的是映射到数据库表的实体类的一般格式
  ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/map.png)
@@ -442,11 +443,12 @@ public static class ModelBuilderExtensions
 ```
 
 #### EF Core存储过程、视图
+虽然ORM好用，但是在许多复杂逻辑的数据处理时，还是会用到SQL和存储过程的方式去处理
 
 * DbSet<TEntity>扩展方法FromSql：
 DbSet<TEntity>.FromSql();<br>
 结果一定要是实体类型，就是数据库表映射的模型<br>
-在执行的SQL语句中返回所有列，并且列名必须与实体属性名相匹配，否则执行会出错<br>
+在执行的带参数的sqlSQL语句中返回所有列，并且列名必须与实体属性名相匹配，否则执行会出错<br>
 这意味着，执行存储过程返回的结果一定是跟数据库表相关的所有字段<br>
 FromSql方式的结果不能有关联关系数据,相当于不能join ，也返回不了join关联表的数据。
 
@@ -456,6 +458,11 @@ DbContext.Database.ExecuteSqlCommand()；<br>
 有效的操作是INSERT、UPDATE和DELETE的存储过程，但不能用于返回实体。<br>
 
 
+* 还可以用DbCommand简单的扩展数据框架上下文对象，使其可以执行存储过程并返回你想要的数据类型
+
+
+通过EFCore多表联合查询方式，无论是通过Join或者Include方式在操作上都不是很方便，
+可以为视图View创建对应的实体类。
 EF Core是不支持存储过程及视图的映射的,直接通过DbContext是没有办法直接调用到视图的
 ```c#
 protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -473,7 +480,7 @@ public void UpdateTestNum()
 ｝
 
 
-// 映射的实体
+// 视图对应的实体
 /// <summary>
 /// 获取委托单的已测数量（匹配桩号）
 /// </summary>
