@@ -284,12 +284,12 @@ ErrorMessage ="邮箱格式不正确")]
 
 ### EF Core
 Entity Framework的全称为ADO.NET Entity Framework，是在ADO.NET上层实现的ORM（对象关系映射）封装<br>
- ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/EF.png)
-Entity Framework的使用分为以下四步：
-* 连接配置：如何与数据库进行连接。我们可以通过连接字符串或者代码进行设置
-* 关系映射:SSDL存储模型 MSL关系映射 CSDL概念模型              
-* 上下文环境定义：DBContext 可以理解为是一个容器，里面有对象与数据表的映射关系以及对象本身。
-* 数据持久化：数据持久化就是将内存中的概念模型转换为存储模型,以及将存储模型转换为内存中的数据模型的统称。
+ ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/EF.png) <br>
+
+EF Core 是一个ORM（对象关系映射），它使.NET 开发人员可以使用 .NET对象操作数据库，<br>
+避免了像ADO.NET访问数据库的代码，开发者只需要编写对象即可<br>
+
+EF Core 支持多种数据库引擎：SQL Sever、MySQL、SQLite、Npgsql、、、
 
 EF的三种编程模式：
 * DataBase First：开发模式指以数据库设计为基础，并根据数据库自动生成实体数据模型
@@ -298,6 +298,14 @@ EF的三种编程模式：
 Model First与Database First是互逆的，但最终都是输出数据库和实体数据模型
 * Code First：完全通过手动编码，就可以使用Entity Framewokr技术来实现数据访问。
 该模式的优点在于，支持POCO（Plain Old CLR Objects，简单传统CLR对象），代码整洁，程序员对代码的控制也更灵活自如<br>
+
+Code First是通过EF迁移来完成从模型生成数据库。
+
+Entity Framework的使用分为以下四步：
+* 连接配置：如何与数据库进行连接。我们可以通过连接字符串或者代码进行设置
+* 关系映射:SSDL存储模型 MSL关系映射 CSDL概念模型              
+* 上下文环境定义：DBContext 可以理解为是一个容器，里面有对象与数据表的映射关系以及对象本身。
+* 数据持久化：数据持久化就是将内存中的概念模型转换为存储模型,以及将存储模型转换为内存中的数据模型的统称。
 
 
 #### EF Core将类映射到数据库
@@ -512,7 +520,7 @@ public class ViewEntrustWithTestDataTestNumMatchPile
 
 EF 跟踪对象状态有五个状态：
 * Detached（游离态，脱离态） 
-* Unchanged（未改变）、
+* Unchanged（未改变）
 * Added（新增）
 * Deleted（删除）
 * Modified（被修改）
@@ -567,7 +575,8 @@ st = _student.Where(g => g.Gender == Gender.男);
 
 * orderby/OrderBy() 对查询出的元素进行排序（默认升序）
 * orderby descending/OrderByDescending() 对查询出的元素进行降序排列
-* group/GroupBy() 可产生按照指定的键组织的组序列
+* group/GroupBy() 可产生按照指定的键组织的组序列,元素分组后的结果
+
 * Join()按照两个指定匹配条件来Equals连接两个数据源
 在表关系中有一对一关系，一对多关系，多对多关系等<br>
 在Join操作中，分别为Join(Join查询), SelectMany(Select一对多选择)和GroupJoin(分组Join查询)<br>
