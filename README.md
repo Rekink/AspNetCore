@@ -548,20 +548,60 @@ LINQ是一组语言特性和API，可以使用统一的方式编写各种查询�
 LINQ主要包含三个部分：
 * LINQ to Objects  主要负责对象的查询。
 * LINQ to XML      主要负责XML的查询。
-* LINQ to ADO.NET  主要负责数据库的查询。
-* 	LINQ to SQL
-* 	LINQ to DataSet
-* 	LINQ to Entities
+* LINQ to ADO.NET  主要负责数据库的查询，包括，LINQ to SQL、LINQ to DataSet、LINQ to Entities
+
 
 常见的语法：
-* from后跟的是数据源
-* where后跟的是查询条件
-* select筛选出符合条件的数据
-* orderby/OrderBy()进行排序（默认升序）
-* orderby descending/OrderByDescending()降序排列
-* group/GroupBy()可产生按照指定的键组织的组序列
-* Join()
-* GroupJoin()将基于键相等对两个序列的元素进行关联并对结果进行分组使用默认的相等比较器对键进行比较。
+* from 指定范围变量和数据源
+* where 根据bool表达式从数据源中筛选数据
+* select 从指定查询结果中的元素中，筛选出符合条件的数据
+```c#
+// 查询语法，看上去和SQL的语句很相似
+var st = from g in _student
+         where g.Gender == Gender.男
+         select g;
+
+// 方法语法,是命令形式
+st = _student.Where(g => g.Gender == Gender.男);
+```
+
+* orderby/OrderBy() 对查询出的元素进行排序（默认升序）
+* orderby descending/OrderByDescending() 对查询出的元素进行降序排列
+* group/GroupBy() 可产生按照指定的键组织的组序列
+* Join()按照两个指定匹配条件来Equals连接两个数据源
+在表关系中有一对一关系，一对多关系，多对多关系等<br>
+在Join操作中，分别为Join(Join查询), SelectMany(Select一对多选择)和GroupJoin(分组Join查询)<br>
+
+一对多关系：
+```c#
+// Customers与Orders是一对多关系。即Orders在Customers类中以EntitySet形式出现
+// 所以第二个from是从c.Orders而不是db.Orders里进行筛选
+// 在From子句中使用外键导航选择伦敦客户的所有订单
+var query =
+    from c in db.Customers
+    from o in c.Orders
+    where c.City == "London"
+    select o;
+```
+
+多对多关系：
+```c#
+// 多对多关系一般会涉及三个表(如果有一个表是自关联的，那有可能只有2个表)
+// 这一句语句涉及Employees, EmployeeTerritories, Territories三个表。
+// 它们的关系是1：M：1。Employees和Territories没有很明确的关系。
+// 在From子句中使用外键导航筛选在西雅图的雇员，同时列出其所在地区
+var query =
+    from e in db.Employees
+    from et in e.EmployeeTerritories
+    where e.City == "Seattle"
+    select new
+    {
+        e.FirstName,
+        e.LastName,
+        et.Territory.TerritoryDescription
+    };
+```
+
 * Union()用于将两个输入序列中的元素合并成一个新的序列，且新序列中自动去除重复的序列
 * Intersect()求两个序列的交集，将两个序列中相同的元素挑选出来组成一个新的序列
 * Except()现有A、B两序列，返回仅在A序列中的元素所组成的序列，相当于求差集
