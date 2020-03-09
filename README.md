@@ -443,7 +443,7 @@ public static class ModelBuilderExtensions
 ```
 
 #### EF Core存储过程、视图
-虽然ORM好用，但是在许多复杂逻辑的数据处理时，还是会用到SQL和存储过程的方式去处理
+在处理许多复杂逻辑的数据处理时，会用到SQL和存储过程的方式去处理
 
 * DbSet<TEntity>扩展方法FromSql：
 DbSet<TEntity>.FromSql();<br>
@@ -455,7 +455,7 @@ FromSql方式的结果不能有关联关系数据,相当于不能join ，也返�
 * DbContext有一个Database属性，其包括一个方法ExecuteSqlCommand：
 DbContext.Database.ExecuteSqlCommand()；<br>
 此方法返回一个整数，表示执行的SQL语句影响的行数<br>
-有效的操作是INSERT、UPDATE和DELETE的存储过程，但不能用于返回实体。<br>
+有效的操作，非查询语句，INSERT、UPDATE和DELETE的存储过程，但不能用于返回实体。<br>
 
 
 * 还可以用DbCommand简单的扩展数据框架上下文对象，使其可以执行存储过程并返回你想要的数据类型
@@ -478,7 +478,6 @@ public void UpdateTestNum()
 {
     var jyList = context.Query<ViewEntrustWithJyDataTestNumMatchPile>().Where(m => m.MeasuredNum != m.oldMeasuredMum).ToList();
 ｝
-
 
 // 视图对应的实体
 /// <summary>
@@ -504,6 +503,70 @@ public class ViewEntrustWithTestDataTestNumMatchPile
     public int oldMeasuredMum { get; set; } 
 }
 ```
+
+
+#### EF对象状态
+当从数据库中查询出数据时，上下文就会创建实体快照，从而追踪实体<br>
+在调用 SaveChanges 时，扫描上下文中所有实体，并比较当前属性值和存储在快照中的原始属性值<br>
+如果被找到的属性值发生了改变，实体的任何更改都会保存到数据库中<br>
+
+EF 跟踪对象状态有五个状态：
+* Detached（游离态，脱离态） 
+* Unchanged（未改变）、
+* Added（新增）
+* Deleted（删除）
+* Modified（被修改）
+EF 会跟踪对象状态的改变，当执行SavaChanged()方法期间，会查看当前对象的EntityState的值，<br>
+决定是去新增、修改、删除或者什么也不做
+
+
+#### 优化
+* Model实体字段类型（byte）
+* ViewModel代替实体Model
+* 对于只读操作，查询出来的对象只是供显示使用，不需要修改、删除后保存，那么可以使用AsNoTracking()<br>
+AsNoTracking查询出来的对象是Detached状态，这样对对象的修改也还是 Detached状态，EF将不再跟踪这个对象状态的改变，能够提升性能。
+同时由于没有受到上下文的跟踪缓存，因此取得的数据也是及时最新的，更利于某些对数据及时性要求高的数据查询。<br>
+AsNoTracking()是 DbQuery 类（DbSet的父类）的方法，要先在DbSet后，调用AsNoTracking()方法
+```c#
+var p1 = ctx.Persons.Where(p => p.Name == "baidu.com").FirstOrDefault();
+Console.WriteLine(ctx.Entry(p1).State);
+
+//改成：
+var p1 = ctx.Persons.AsNoTracking().Where(p => p.Name == "baidu.com").FirstOrDefault();
+Console.WriteLine(ctx.Entry(p1).State);
+```
+如果确实还想再更新，使用ctx.Entry().State=System.Data.Entity.EntityState.Unchanged;进行强制状态转换后，即可再更新。
+
+
+#### LINQ
+LINQ是一组语言特性和API，可以使用统一的方式编写各种查询。用于保存和检索来自不同数据源的数据，<br>
+从而消除了编程语音和数据库之间的不匹配，以及为不同类型的数据源提供单个查询接口。
+* 是面向对象的SQL，SQL是关系型数据库查询，LINQ是对内存里的数据的查询
+* 通过表达式分析与实体到关系的映射，把linq转换为sql语句或是对xml的查询
+* 数据库到对象结构的一个中间层，将关系数据的管理转换为对象的操作，专心于对象模型的处理
+
+LINQ主要包含三个部分：
+* LINQ to Objects  主要负责对象的查询。
+* LINQ to XML      主要负责XML的查询。
+* LINQ to ADO.NET  主要负责数据库的查询。
+* 	LINQ to SQL
+* 	LINQ to DataSet
+* 	LINQ to Entities
+
+常见的语法：
+* from后跟的是数据源
+* where后跟的是查询条件
+* select筛选出符合条件的数据
+* orderby/OrderBy()进行排序（默认升序）
+* orderby descending/OrderByDescending()降序排列
+* group/GroupBy()可产生按照指定的键组织的组序列
+* Join()
+* GroupJoin()将基于键相等对两个序列的元素进行关联并对结果进行分组使用默认的相等比较器对键进行比较。
+* Union()用于将两个输入序列中的元素合并成一个新的序列，且新序列中自动去除重复的序列
+* Intersect()求两个序列的交集，将两个序列中相同的元素挑选出来组成一个新的序列
+* Except()现有A、B两序列，返回仅在A序列中的元素所组成的序列，相当于求差集
+* Contact()联接两个序列
+* Distinct检测每一个输入元素是否有相同的，如果有相同的元素则作为一个元素添加到结果序列中，相当于去除重复
 
 
 

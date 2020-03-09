@@ -49,6 +49,24 @@ namespace StudyManagement.Services
 
         public Student Add(Student stu)
         {
+            // 查询语法，看上去和SQL的语句很相似
+            var st = from g in _student
+                     where g.Gender == Gender.男
+                     select g;
+
+            // 方法语法,是命令形式
+            st = _student.Where(g => g.Gender == Gender.男);
+
+            var show = _student.GroupJoin(st,
+                p => p.FirstName,
+                pf => pf.LastName,
+                (p, pf) => new
+                {
+                    Name = p.FirstName,
+                    Ye = pf.Max(pf1 => pf1.LastName)
+                });
+
+
             var maxId = _student.Max(x => x.Id);
             stu.Id = maxId + 1;
             _student.Add(stu);
