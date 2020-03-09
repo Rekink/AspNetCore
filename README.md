@@ -299,7 +299,7 @@ Model First与Database First是互逆的，但最终都是输出数据库和实�
 * Code First：完全通过手动编码，就可以使用Entity Framewokr技术来实现数据访问。
 该模式的优点在于，支持POCO（Plain Old CLR Objects，简单传统CLR对象），代码整洁，程序员对代码的控制也更灵活自如<br>
 
-Code First是通过EF迁移来完成从模型生成数据库。
+Code First 是通过EF迁移来完成从模型生成数据库。
 
 Entity Framework的使用分为以下四步：
 * 连接配置：如何与数据库进行连接。我们可以通过连接字符串或者代码进行设置

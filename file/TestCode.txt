@@ -1,0 +1,66 @@
+
+// 学生和桌子的一对一关系
+// 每个学生需要对应一个桌位信息，桌位信息不用包含学生信息
+public class Desk
+{
+    public int Id { get; set; }
+	
+    public string Name { get; set; }
+	
+    public Student Student { get; set; }
+}
+
+// 在Student中定义 DeskID和Desk模型，在Desk表中定义Student模型
+public class Student
+{
+  
+    public int DeskID { get; set; }
+
+    public Desk Desk { get; set; }
+}
+
+// 在DataContext中定义两者的关系
+ protected override void OnModelCreating(ModelBuilder modelBuilder)
+{ 
+
+    //  Do：一对一关系模型
+    modelBuilder.Entity<Student>().HasOne(l => l.Desk).WithOne(l => l.Student)
+        .HasForeignKey<Student>(l => l.DeskID); 
+
+}
+
+public  DbSet<Student> Students { get; set; }
+public DbSet<Desk> Desks { get; set; }
+
+
+
+// 一对多的关系模型定义
+// 学校和老师的一对多关系：一个学校对应多个老师，一个老师对应一个学校
+ public class School
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public List<Teacher> Teachers { get; set; }
+ }
+ 
+// 在Teacher中定义SchoolID和School模型，在School表中定义Teachers
+public class Teacher
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public  int SchoolID { get; set; }
+    public School School { get; set; }
+}
+
+// 在DataContext中定义两者的关系
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{ 
+
+    //  Do：一对多关系模型
+    modelBuilder.Entity<Teacher>().HasOne(l => l.School).WithMany(l => l.Teachers)
+        .HasForeignKey(l => l.SchoolID); 
+}
+
+public  DbSet<Teacher> Teachers { get; set; }
+public DbSet<School> Schools { get; set; }
