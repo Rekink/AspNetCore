@@ -286,7 +286,7 @@ ErrorMessage ="邮箱格式不正确")]
 Entity Framework的全称为ADO.NET Entity Framework，是在ADO.NET上层实现的ORM（对象关系映射）封装<br>
  ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/EF.png) <br>
 
-EF Core 是一个ORM（对象关系映射），它使.NET 开发人员可以使用 .NET对象操作数据库，<br>
+EF Core 是一个ORM（对象关系映射），它使.NET开发人员可以使用.NET对象操作数据库，<br>
 避免了像ADO.NET访问数据库的代码，开发者只需要编写对象即可<br>
 
 EF Core 支持多种数据库引擎：SQL Sever、MySQL、SQLite、Npgsql、、、
@@ -308,8 +308,13 @@ Entity Framework的使用分为以下四步：
 * 数据持久化：数据持久化就是将内存中的概念模型转换为存储模型,以及将存储模型转换为内存中的数据模型的统称。
 
 
+#### 获取EF Core
+* 通过NuGet获取要使用的数据库支持。比如：Microsoft SQL Sever
+* 打开NuGet程序包管理器控制台，输入：Install-Package Microsoft.EntityFrameworkCore.SqlServer
+
+
 #### EF Core将类映射到数据库
-EF Core框架能快速的帮助我们进行常规的数据处理和项目开发<br>
+EF Core通过一个模型进行数据库访问的<br>
 EF Core将类映射为数据库中的表. 每一张表对应创建一个实体类,或者你已有一个数据库则需要匹配数据库表<br> 
 有很多的规则和配置, 下图给出的是映射到数据库表的实体类的一般格式
  ![Image text](https://github.com/Rekink/AspNetCore/raw/master/pic/map.png)
@@ -469,9 +474,10 @@ DbContext.Database.ExecuteSqlCommand()；<br>
 * 还可以用DbCommand简单的扩展数据框架上下文对象，使其可以执行存储过程并返回你想要的数据类型
 
 
-通过EFCore多表联合查询方式，无论是通过Join或者Include方式在操作上都不是很方便，
+通过EFCore多表联合查询方式，无论是通过Join或者Include方式在操作上都不是很方便，<br>
+EF Core是不支持存储过程及视图的映射的,直接通过DbContext是没有办法直接调用到视图的<br>
 可以为视图View创建对应的实体类。
-EF Core是不支持存储过程及视图的映射的,直接通过DbContext是没有办法直接调用到视图的
+
 ```c#
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {           
