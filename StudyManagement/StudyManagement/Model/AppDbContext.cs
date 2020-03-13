@@ -22,8 +22,22 @@ namespace StudyManagement.Model
         // 对DbSet采用Linq查询的时候，EFCore自动将其转换为SQL语句
         public DbSet<Student> Students { get; set; }
 
+        public DbSet<Desk> Desks { get; set; }
+
+        public DbSet<Teacher> Teachers { get; set; }
+
+        public DbSet<School> Schools { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //  一对一关系模型
+            //modelBuilder.Entity<Student>().HasOne(l => l.Desk).WithOne(l => l.Student)
+            //    .HasForeignKey<Student>(l => l.DeskId);
+
+            // 一对多关系模型
+            modelBuilder.Entity<Teacher>().HasOne(l => l.School).WithMany(l => l.Teachers)
+                .HasForeignKey(l => l.SchoolID);
+
             // 添加种子数据
             modelBuilder.Seed();
 

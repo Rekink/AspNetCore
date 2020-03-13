@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +28,11 @@ namespace StudyManagement.Model
         public string Email { get; set; }
 
         public string PhotoPath { get; set; }
-        
+
+        //public int DeskId { get; set; }
+
+        //[ForeignKey("DeskId")]
+        public Desk Desk { get; set; }
+
     }
 }

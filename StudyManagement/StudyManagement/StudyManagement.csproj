@@ -8,6 +8,24 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200302022644_AddPhotoPathToStudents.cs" />
     <Compile Remove="Migrations\20200302022644_AddPhotoPathToStudents.Designer.cs" />
+    <Compile Remove="Migrations\20200313032300_AddForeignKeyToStudents.cs" />
+    <Compile Remove="Migrations\20200313032300_AddForeignKeyToStudents.Designer.cs" />
+    <Compile Remove="Migrations\20200313034212_AddDeskToStudents.cs" />
+    <Compile Remove="Migrations\20200313034212_AddDeskToStudents.Designer.cs" />
+    <Compile Remove="Migrations\20200313034342_AddDeskIdToStudents.cs" />
+    <Compile Remove="Migrations\20200313034342_AddDeskIdToStudents.Designer.cs" />
+    <Compile Remove="Migrations\20200313034629_AddDeskToStudents.cs" />
+    <Compile Remove="Migrations\20200313034629_AddDeskToStudents.Designer.cs" />
+    <Compile Remove="Migrations\20200313034823_updatedesk.cs" />
+    <Compile Remove="Migrations\20200313034823_updatedesk.Designer.cs" />
+    <Compile Remove="Migrations\20200313035106_updata.cs" />
+    <Compile Remove="Migrations\20200313035106_updata.Designer.cs" />
+    <Compile Remove="Migrations\20200313035153_updata.cs" />
+    <Compile Remove="Migrations\20200313035153_updata.Designer.cs" />
+    <Compile Remove="Migrations\20200313035750_DeskIdToStudent.cs" />
+    <Compile Remove="Migrations\20200313035750_DeskIdToStudent.Designer.cs" />
+    <Compile Remove="Migrations\20200313040234_DeskIdToStudent.cs" />
+    <Compile Remove="Migrations\20200313040234_DeskIdToStudent.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

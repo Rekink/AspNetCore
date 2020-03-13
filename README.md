@@ -584,7 +584,30 @@ st = _student.Where(g => g.Gender == Gender.男);
 * group/GroupBy() 可产生按照指定的键组织的组序列,元素分组后的结果
 
 * Join()按照两个指定匹配条件来Equals连接两个数据源
-在表关系中有一对一关系，一对多关系，多对多关系等<br>
+在表关系中有一对一关系，一对多关系，多对多关系等
+```c#
+// Customers与Orders是一对多关系,使用外键导航选择伦敦客户的所有订单
+var query =
+    from c in db.Customers
+    from o in c.Orders
+    where c.City == "London"
+    select o;
+```
+
+多对多关系
+```c#
+// 使用外键导航筛选在WH的雇员，同时列出其所在地区
+var query =
+    from e in db.Employees
+    from et in e.EmployeeAddress
+    where e.City == "WH"
+    select new
+    {
+        e.FirstName,
+        e.LastName,
+        et.Address.AddressDescription
+    };
+```
 在Join操作中，分别为Join(Join查询), SelectMany(Select一对多选择)和GroupJoin(分组Join查询)<br>
 
 一对多关系：

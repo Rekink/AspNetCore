@@ -19,6 +19,32 @@ namespace StudyManagement.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("StudyManagement.Model.Desk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Desks");
+                });
+
+            modelBuilder.Entity("StudyManagement.Model.School", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Schools");
+                });
+
             modelBuilder.Entity("StudyManagement.Model.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -28,6 +54,8 @@ namespace StudyManagement.Migrations
                     b.Property<DateTime>("BirthDate");
 
                     b.Property<int?>("ClassName");
+
+                    b.Property<int?>("DeskId");
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -44,6 +72,8 @@ namespace StudyManagement.Migrations
                     b.Property<string>("PhotoPath");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeskId");
 
                     b.ToTable("Students");
 
@@ -68,6 +98,38 @@ namespace StudyManagement.Migrations
                             Gender = 1,
                             LastName = "zhou"
                         });
+                });
+
+            modelBuilder.Entity("StudyManagement.Model.Teacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("SchoolID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SchoolID");
+
+                    b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("StudyManagement.Model.Student", b =>
+                {
+                    b.HasOne("StudyManagement.Model.Desk", "Desk")
+                        .WithMany()
+                        .HasForeignKey("DeskId");
+                });
+
+            modelBuilder.Entity("StudyManagement.Model.Teacher", b =>
+                {
+                    b.HasOne("StudyManagement.Model.School", "School")
+                        .WithMany("Teachers")
+                        .HasForeignKey("SchoolID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
