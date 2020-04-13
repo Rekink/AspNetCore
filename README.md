@@ -626,6 +626,60 @@ var query =
     where c.City == "London"
     select o;
 ```
+<br>
+```c#
+using System;
+using Microsoft.EntityFrameworkCore;
+ 
+namespace ASPNetEFFCore.Models
+{
+    // city和Province为一对多关系，Province有多个city，而一个city只能有一个Province
+    public class MyContext:DbContext
+    {
+        public MyContext(DbContextOptions<MyContext> options):base(options)
+        {
+        }
+ 
+       protected override void OnModelCreating(ModelBuilder modelBuilder){
+ 
+            //配置多对多 ，就是两个一对多,可以不写
+ 
+            modelBuilder.Entity<City>().HasOne(city => city.Province).WithMany(x => x.Cities).HasForeignKey(city => .ProviceId);
+        }
+ 
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<City> Cities { get; set; }
+ 
+ 
+    }
+    public class Province
+    {
+        public Province()
+        {
+            Cities = new List<City>();
+        }
+ 
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Population { get; set; }
+        public List<City> Cities { get; set; }
+    }
+ 
+     public class City
+    {
+     
+ 
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string AreaCode { get; set; }
+        public int ProviceId { get; set; }
+        public Province Province { get; set; }
+ 
+         public Mayor Mayor {get;set;}
+    }
+}
+```
+
 
 多对多关系：
 ```c#
@@ -644,6 +698,80 @@ var query =
         et.Territory.TerritoryDescription
     };
 ```
+<br>
+```c#
+using System;
+using Microsoft.EntityFrameworkCore;
+ 
+namespace ASPNetEFFCore.Models
+{
+    // city和company为多对多关系，一个city会有多个company，一个company在多个city都有多个分company
+    public class MyContext:DbContext
+    {
+        public MyContext(DbContextOptions<MyContext> options):base(options)
+        {
+        }
+ 
+       protected override void OnModelCreating(ModelBuilder modelBuilder){
+           //使用x.CityId,x.CompanyId生成 cityCompany的联合主键
+           //执行数据库迁移
+           modelBuilder.Entity<CityCompany>().HasKey(x => new{x.CityId,x.CompanyId});
+ 
+            //配置多对多 ，就是两个一对多,可以不写
+           modelBuilder.Entity<CityCompany>().HasOne(x => x.City).WithMany(x=> x.CityCompany).HasForeignKey(x=>x.CityId);
+         modelBuilder.Entity<CityCompany>().HasOne(x => x.Company).WithMany(x=> x.CityCompany).HasForeignKey(x=>x.CompanyId);
+    
+        }
+  
+        public DbSet<City> Cities { get; set; }
+ 
+        public DbSet<CityCompany> cityCompanies {get;set;}
+    }
+    
+    public class City
+    {
+         public City()
+        {
+            CityCompany = new List<CityCompany>();
+        }
+ 
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string AreaCode { get; set; }
+        public int ProvinceId { get; set; }
+        public Province Province { get; set; }
+ 
+        //多对多映射
+        public List<CityCompany> CityCompany {get;set;}
+    }
+ 
+     public class Company
+    {
+        public Company()
+        {
+            CityCompany = new List<CityCompany>();
+        }
+ 
+        public int Id {get;set;}
+        public string Name {get;set;}
+        public DateTime EstablishDate {get;set;}
+        public string LegalPerson {get;set;}
+ 
+        //多对多映射
+        public List<CityCompany> CityCompany {get;set;}
+    }
+    //多对多中间model
+    public class CityCompany
+    {
+       public int CityId {get;set;}
+       public City City{get;set;}
+       public int CompanyId {get;set;} 
+       public Company Company {get;set;}
+    }
+}﻿
+
+```
+
 
 * Union()用于将两个输入序列中的元素合并成一个新的序列，且新序列中自动去除重复的序列
 * Intersect()求两个序列的交集，将两个序列中相同的元素挑选出来组成一个新的序列
