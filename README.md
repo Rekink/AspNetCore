@@ -469,7 +469,11 @@ FromSql方式的结果不能有关联关系数据,相当于不能join ，也返�
 DbContext.Database.ExecuteSqlCommand()；<br>
 此方法返回一个整数，表示执行的SQL语句影响的行数<br>
 有效的操作，非查询语句，INSERT、UPDATE和DELETE的存储过程，但不能用于返回实体。<br>
-
+```c#
+ // 将关联委托桩列表置为已出报告
+ string sql = "update EntrustPiles set ReportFlag=1 where EntrustId =" + entrust.Id + " and IsDeleted=0";
+ int rows = await _entrustRepository.GetDbContext().Database.ExecuteSqlCommandAsync(sql);
+```
 
 * 还可以用DbCommand简单的扩展数据框架上下文对象，使其可以执行存储过程并返回你想要的数据类型
 
@@ -589,7 +593,10 @@ st = _student.Where(g => g.Gender == Gender.男);
 * group/GroupBy() 可产生按照指定的键组织的组序列,元素分组后的结果
 
 * Join()按照两个指定匹配条件来Equals连接两个数据源
-在表关系中有一对一关系，一对多关系，多对多关系等
+在表关系中有一对一关系，一对多关系，多对多关系等<br>
+
+https://www.cnblogs.com/visibleisfalse/p/10774150.html
+
 ```c#
 // Customers与Orders是一对多关系,使用外键导航选择伦敦客户的所有订单
 var query =
@@ -705,21 +712,41 @@ using Microsoft.EntityFrameworkCore;
  
 namespace ASPNetEFFCore.Models
 {
-    // city和company为多对多关系，一个city会有多个company，一个company在多个city都有多个分company
+    // city和company为多对多关系，
+	// 一个city会有多个company，一个company在多个city都有多个分company
+	// 配置多对多关系
     public class MyContext:DbContext
     {
         public MyContext(DbContextOptions<MyContext> options):base(options)
         {
         }
  
-       protected override void OnModelCreating(ModelBuilder modelBuilder){
-           //使用x.CityId,x.CompanyId生成 cityCompany的联合主键
-           //执行数据库迁移
+           protected override void OnModelCreating(ModelBuilder modelBuilder){
+           // 使用x.CityId,x.CompanyId生成 cityCompany的联合主键
+		   // 也可以有自己的Id作为主键
+		   // 还可以为CityCompany添加其他属性
+           // 添加复合主键          
            modelBuilder.Entity<CityCompany>().HasKey(x => new{x.CityId,x.CompanyId});
  
-            //配置多对多 ，就是两个一对多,可以不写
-           modelBuilder.Entity<CityCompany>().HasOne(x => x.City).WithMany(x=> x.CityCompany).HasForeignKey(x=>x.CityId);
-         modelBuilder.Entity<CityCompany>().HasOne(x => x.Company).WithMany(x=> x.CityCompany).HasForeignKey(x=>x.CompanyId);
+ 
+           // 配置多对多 ，就是两个一对多,可以不写
+		   // 添加 FluentAPI 配置，在配置多对多关系时，必须指定级联删除。
+​           // EFCore的几种级联模式：Cascade、Restrict、SetNull、ClientSetNull
+           modelBuilder.Entity<CityCompany>()
+		               .HasOne(x => x.City)
+					   .WithMany(x=> x.CityCompany)
+					   .HasForeignKey(x=>x.CityId)
+					   .OnDelete(DeleteBehavior.ClientSetNull);
+					   
+					   
+           modelBuilder.Entity<CityCompany>()
+		               .HasOne(x => x.Company)
+					   .WithMany(x=> x.CityCompany)
+					   .HasForeignKey(x=>x.CompanyId);
+					   
+		    // 没有以上配置在更新数据库时会报错
+			// 可能会导致循环或多重级联路径。
+			// 请指定 ON DELETE NO ACTION 或 ON UPDATE NO ACTION，或修改其他 FOREIGN KEY 约束。
     
         }
   
@@ -760,14 +787,29 @@ namespace ASPNetEFFCore.Models
         //多对多映射
         public List<CityCompany> CityCompany {get;set;}
     }
+		
     //多对多中间model
     public class CityCompany
     {
+	   //public int Id {get;set;}
        public int CityId {get;set;}
-       public City City{get;set;}
+       public virtual City City{get;set;}
        public int CompanyId {get;set;} 
-       public Company Company {get;set;}
+       public virtual Company Company {get;set;}
     }
+	
+	// 
+	// virtual标记的对象(延迟加载:
+	// 当client调用服务时，服务需要马上把数据查出来，然后返回给clien。
+	// 因此client和服务可以说是即查即用的
+	
+	// 在你用到此数据的时候会自动再去查询数据，
+	// 当服务用到此数据的时候会自动再次去查询导航属性)
+	
+	// virtual标记的对象为导航属性的对象，
+	// EF读取数据实例化Entity时，为动态生成一个继承与Entity的子类，
+	// 在子类中延时获取字表数据，在更新时这个值会被忽略掉，
+	// 所以应该把外键ID加到Entity中，直接去修改这个ID，从而实现修改外键对象。
 }﻿
 
 ```
