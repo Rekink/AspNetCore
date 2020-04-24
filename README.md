@@ -406,7 +406,7 @@ public class AppDbContext : DbContext
 
 * 创建新的迁移记录Add-Migration SeedData添加种子数据
 * 更新数据库架构Update-DataBase
-* 删除未应用到数据库迁移记录(未执行update操作)  Remove-Migration
+* 删除未应用到数据库迁移记录(未执行update操作)  Remove-Migration（对于已经update的操作，只能添加新的迁移记录，覆盖之前的迁移）
 * 数据库迁移记录信息保存在EFMigrationHistory文件中行
 * 模型快照 ModelSnapshot 用于确定将在下一次迁移发生的变化
 
@@ -931,8 +931,154 @@ _ViewStart.cshtml文件所在目录下的每个视图文件开始渲染，先执
 
 
 
+### ABP
+
+#### 仓储（Repositories）
+
+##### 查询（query）
+IRepository定义了从数据库中检索实体的常用方法。
+*取得单一实体
+```c#
+
+// 用于根据主键值(Id)取得对应的实体。
+// 当数据库中根据主键值找不到相符合的实体时,它会抛出例外
+TEntity Get(TPrimaryKey id);
+Task<TEntity> GetAsync(TPrimaryKey id);
+
+// Single方法会在给出的条件找不到实体或符合的实体超过一个以上时,都会抛出例外
+// 输入参数是一个表达式而不是主键值(Id)可以写Lambda表达式来取得实体
+// var person = _personRepository.Single(p => o.Name == "zkz")
+TEntity Single(Expression<Func<TEntity, bool>> predicate);
+
+// FirstOrDefault也一样,但是当没有符合Lambda表达式或Id的实体时,会回传null(取代抛出异常)。
+// 当有超过一个以上的实体符合条件,它只会返回第一个实体
+TEntity FirstOrDefault(TPrimaryKey id);
+Task<TEntity> FirstOrDefaultAsync(TPrimaryKey id);
+TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
+Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+
+// 不会从数据库中检索实体,但它会创建延迟执行所需的代理对象。
+// 如果你只使用Id属性,实际上并不会检索实体,它只有在你存取想要查询实体的某个属性时才会从数据库中查询实体。
+// 当有性能需求的时候,这个方法可以用来替代Get方法
+TEntity Load(TPrimaryKey id);
+
+```
+*取得实体列表
+```c#
+// 用于从数据库中检索所有实体。重载并且提供过滤实体的功能
+List<TEntity> GetAllList();
+Task<List<TEntity>> GetAllListAsync();
+List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
+Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate);
+
+// IQueryable<T>类型的对象。因此我们可以在调用完这个方法之后进行Linq操作
+// 几乎所有查询都可以使用Linq完成。甚至可以用它来编写Join表达式
+IQueryable<TEntity> GetAll();
+
+```
+
+*自定义返回值(Custom return value)
+
+https://www.jb51.net/article/86780.htm
+
+##### 新增（insert）
+
+##### 更新（update）
+
+##### 删除（delete）
 
 
+#### 审计（Auditing）
+实体类实现 IHasCreationTime 接口就可以具有CreationTime的属性。当该实体被插入到数据库时， ABP会自动设置该属性的值为当前时间。
+```c#
+public interface IHasCreationTime
+{
+  DateTime CreationTime { get; set; }
+}
+```
+Person类可以被重写像下面示例一样实现IHasCreationTime 接口：
+```c#
+public class Person : Entity<long>, IHasCreationTime
+{
+  public virtual string Name { get; set; }
+
+  public virtual DateTime CreationTime { get; set; }
+
+  public Task()
+  {
+    CreationTime = DateTime.Now;
+  }
+}
+```
+ICreationAudited 扩展自 IHasCreationTime 并且该接口具有属性 CreatorUserId ：
+```c#
+public interface ICreationAudited : IHasCreationTime
+{
+  long? CreatorUserId { get; set; }
+}
+```
+当保存一个新的实体时，ABP会自动设置CreatorUserId 的属性值为当前用户的Id <br>
+可以轻松的实现ICreationAudited接口，通过派生自实体类 CreationAuditedEntity <br>
+因为该类已经实现了ICreationAudited接口，我们可以直接继承CreationAuditedEntity 类就实现了上述功能。 <br>
+它有一个实现不同ID数据类型的泛型版本(默认是int)，可以为ID（Entity类中的ID）赋予不同的数据类型。 <br>
+下面是一个为实现类似修改功能的接口
+```c#
+public interface IModificationAudited
+{
+  DateTime? LastModificationTime { get; set; }
+  long? LastModifierUserId { get; set; }
+}
+```
+当更新一个实体时，ABP会自动设置这些属性的值。你只需要在你的实体类里面实现这些属性。 <br>
+如果想实现所有的审计属性，可以直接扩展 IAudited 接口，示例如下：
+```c#
+public interface IAudited : ICreationAudited, IModificationAudited
+{
+    
+}
+```
+对于快速开发方式，可以直接派生自AuditedEntity 类，不需要再去实现IAudited接口 <br>
+AuditedEntity 类已经实现了该功能，直接继承该类就可以实现上述功能， <br>
+AuditedEntity 类有一个实现不同ID数据类型的泛型版本(默认是int)，可以为ID（Entity类中的ID）赋予不同的数据类型。
+
+
+#### 软删除(Soft delete)
+软删除是一个通用的模式被用来标记一个已经被删除的实体，而不是实际从数据库中删除记录<br>
+ 例如：你可能不想从数据库中硬删除一条用户记录，因为它被许多其它的表所关联。
+为了实现软删除的目的我们可以实现该接口 ISoftDelete：
+```c#
+public interface ISoftDelete{
+  bool IsDeleted { get; set; }
+}
+```
+ABP实现了开箱即用的软删除模式。当一个实现了软删除的实体正在被被删除，ABP会察觉到这个动作，<br>
+并且阻止其删除，设置IsDeleted 属性值为true并且更新数据库中的实体。<br>
+也就是说，被软删除的记录不可以从数据库中检索出，ABP会为我们自动过滤软删除的记录。<br>
+例如：Select查询，这里指通过ABP查询，不是通过数据库中的查询分析器查询。<br>
+如果你用了软删除，你有可能也想实现这个功能，就是记录谁删除了这个实体。<br>
+实现该功能可以实现IDeletionAudited 接口：
+```c#
+public interface IDeletionAudited : ISoftDelete
+{
+  long? DeleterUserId { get; set; }
+  DateTime? DeletionTime { get; set; }
+}
+```
+IDeletionAudited 扩展自 ISoftDelete接口。当一个实体被删除的时候ABP会自动的为这些属性设置值。<br>
+如果想为实体类扩展所有的审计接口（例如：创建（creation），修改（modification）和删除（deletion））<br>
+可以直接实现IFullAudited接口，因为该接口已经继承了这些接口，请看下面示例：
+```c#
+public interface IDeletionAudited : ISoftDelete
+{
+  long? DeleterUserId { get; set; }
+  DateTime? DeletionTime { get; set; }
+}
+```
+作为一个快捷方式，可以直接从FullAuditedEntity 类派生实体类，因为该类已经实现了IFullAudited接口。<br>
+注意：所有的审计接口和类都有一个泛型模板为了导航定义属性到你的User 实体<br>
+例如：ICreationAudited<TUser>和FullAuditedEntity<TPrimaryKey, TUser>），这里的TUser指的进行创建，<br>
+修改和删除的用户的实体类的类型，详细请看源代码（Abp.Domain.Entities.Auditing空间下的FullAuditedEntity<TPrimaryKey, TUser>类），<br>
+TprimaryKey 指的是Entity基类Id类型，默认是int。
 
 
 
