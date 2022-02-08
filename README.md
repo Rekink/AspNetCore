@@ -687,7 +687,6 @@ namespace ASPNetEFFCore.Models
 }
 ```
 
-
 多对多关系：
 ```c#
 // 多对多关系一般会涉及三个表(如果有一个表是自关联的，那有可能只有2个表)
@@ -705,7 +704,7 @@ var query =
         et.Territory.TerritoryDescription
     };
 ```
-<br>
+
 ```c#
 using System;
 using Microsoft.EntityFrameworkCore;
@@ -811,7 +810,6 @@ namespace ASPNetEFFCore.Models
 	// 在子类中延时获取字表数据，在更新时这个值会被忽略掉，
 	// 所以应该把外键ID加到Entity中，直接去修改这个ID，从而实现修改外键对象。
 }﻿
-
 ```
 
 
@@ -820,8 +818,6 @@ namespace ASPNetEFFCore.Models
 * Except()现有A、B两序列，返回仅在A序列中的元素所组成的序列，相当于求差集
 * Contact()联接两个序列
 * Distinct检测每一个输入元素是否有相同的，如果有相同的元素则作为一个元素添加到结果序列中，相当于去除重复
-
-
 
 
 #### 实现仓储
