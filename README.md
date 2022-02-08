@@ -633,7 +633,7 @@ var query =
     where c.City == "London"
     select o;
 ```
-<br>
+
 ```c#
 using System;
 using Microsoft.EntityFrameworkCore;
